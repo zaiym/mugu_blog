@@ -1,0 +1,27 @@
+server:
+  port: 9002
+spring:
+  application:
+    name: blog-user-boot
+  main:
+    allow-bean-definition-overriding: true
+  cloud:
+    nacos:
+      ## 注册中心配置
+      discovery:
+        # nacos的服务地址，nacos-server中IP地址:端口号
+        server-addr: 127.0.0.1:8848
+        username: nacos
+        password: nacos
+        namespace: 3a721411-91e7-44dd-b5a8-01146ebe646e
+  datasource:
+    driverClassName: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3306/blog_auth_server?useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull&useSSL=false&allowMultiQueries=true&serverTimezone=Asia/Shanghai
+    username: root
+    password: Nov2014
+management:
+  endpoints:
+    web:
+      exposure:
+        ## yml文件中存在特殊字符，必须用单引号包含，否则启动报错
+        include: '*'

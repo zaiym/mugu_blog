@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mugu.blog.user.boot.dao.SysUserMapper">
+
+    <select id="selectByUserName" resultType="com.mugu.blog.user.common.po.SysUser">
+        select * from sys_user where username=#{username} and status=1
+    </select>
+    <select id="selectRolesByUserId" resultType="com.mugu.blog.user.common.po.SysRole">
+			SELECT
+		id,
+		NAME,
+		CODE,
+	STATUS
+	FROM
+		sys_role sr
+	WHERE
+		sr.STATUS = 1
+		AND EXISTS (
+	SELECT
+		sur.role_id
+	FROM
+		sys_user_role sur
+		INNER JOIN sys_user su ON su.id = sur.user_id
+	WHERE
+		su.user_id = #{userId}
+		AND sr.id = sur.role_id
+		)
+    </select>
+</mapper>
