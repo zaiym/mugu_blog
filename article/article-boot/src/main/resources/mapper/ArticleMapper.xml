@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mugu.blog.article.dao.ArticleMapper">
+
+    <resultMap id="BaseResultMap" type="com.mugu.blog.article.common.model.po.Article" >
+        <result column="id" property="id" />
+        <result column="author_id" property="authorId" />
+        <result column="type_id" property="typeId" />
+        <result column="title" property="title" />
+        <result column="content" property="content" />
+        <result column="source" property="source" />
+        <result column="view_num" property="viewNum" />
+        <result column="img_url" property="imgUrl" />
+        <result column="is_recommend" property="isRecommend" />
+        <result column="is_explain" property="isExplain" />
+        <result column="is_appreciate" property="isAppreciate" />
+        <result column="is_comment" property="isComment" />
+        <result column="status" property="status" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+        <result column="describe" property="describe" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+                id,
+                author_id,
+                type_id,
+                title,
+                content,
+                source,
+                view_num,
+                img_url,
+                `describe`,
+                is_recommend,
+                is_explain,
+                is_appreciate,
+                is_comment,
+                status,
+                create_time,
+                update_time
+    </sql>
+
+    <insert id="insert" useGeneratedKeys="true" keyColumn="id" keyProperty="id" parameterType="com.mugu.blog.article.common.model.po.Article">
+        INSERT INTO article
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="null != authorId">
+                author_id,
+            </if>
+            <if test="null != typeId ">
+                type_id,
+            </if>
+            <if test="null != title and '' != title">
+                title,
+            </if>
+            <if test="null != content and '' != content">
+                content,
+            </if>
+            <if test="null != source ">
+                source,
+            </if>
+            <if test="null != viewNum ">
+                view_num,
+            </if>
+            <if test="null != imgUrl and '' != imgUrl">
+                img_url,
+            </if>
+            <if test="null != isRecommend ">
+                is_recommend,
+            </if>
+            <if test="null != isExplain ">
+                is_explain,
+            </if>
+            <if test="null != isAppreciate ">
+                is_appreciate,
+            </if>
+            <if test="null != isComment ">
+                is_comment,
+            </if>
+            <if test="null != status ">
+                status,
+            </if>
+
+            <if test="null !=createTime ">
+                create_time,
+            </if>
+
+            <if test="null !=updateTime ">
+                update_time,
+            </if>
+
+            <if test="null !=describe ">
+                `describe`
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="null != authorId">
+                #{authorId},
+            </if>
+            <if test="null != typeId">
+                #{typeId},
+            </if>
+            <if test="null != title and '' != title">
+                #{title},
+            </if>
+            <if test="null != content and '' != content">
+                #{content},
+            </if>
+            <if test="null != source ">
+                #{source},
+            </if>
+            <if test="null != viewNum">
+                #{viewNum},
+            </if>
+            <if test="null != imgUrl and '' != imgUrl">
+                #{imgUrl},
+            </if>
+            <if test="null != isRecommend ">
+                #{isRecommend},
+            </if>
+            <if test="null != isExplain">
+                #{isExplain},
+            </if>
+            <if test="null != isAppreciate">
+                #{isAppreciate},
+            </if>
+            <if test="null != isComment">
+                #{isComment},
+            </if>
+            <if test="null != status ">
+                #{status},
+            </if>
+
+            <if test="null !=createTime ">
+                #{createTime},
+            </if>
+
+            <if test="null !=updateTime ">
+                #{updateTime},
+            </if>
+
+            <if test="null !=describe ">
+                #{describe}
+            </if>
+        </trim>
+    </insert>
+
+    <insert id="insertArticleIp">
+        insert into article_ip(article_id,ip) values(#{articleId},#{ip})
+    </insert>
+
+    <delete id="delete" >
+        DELETE FROM article
+        WHERE id = #{id}
+    </delete>
+    
+    <delete id="delById">
+        update article set status=0 where id in
+        <foreach collection="list" item="item" open="(" separator="," close=")">
+            #{item.id}
+        </foreach>
+    </delete>
+
+    <update id="update" parameterType="com.mugu.blog.article.common.model.po.Article">
+        UPDATE article
+        <set>
+            <if test="null != authorId">author_id = #{authorId},</if>
+            <if test="null != typeId">type_id = #{typeId},</if>
+            <if test="null != title and '' != title">title = #{title},</if>
+            <if test="null != content and '' != content">content = #{content},</if>
+            <if test="null != source ">source = #{source},</if>
+            <if test="null != viewNum">view_num = #{viewNum},</if>
+            <if test="null != imgUrl and '' != imgUrl">img_url = #{imgUrl},</if>
+            <if test="null != isRecommend ">is_recommend = #{isRecommend},</if>
+            <if test="null != isExplain">>is_explain = #{isExplain},</if>
+            <if test="null != isAppreciate">is_appreciate = #{isAppreciate},</if>
+            <if test="null != isComment and">is_comment = #{isComment},</if>
+            <if test="null != status ">status = #{status}</if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+
+    <select id="load" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List" />
+        FROM article
+        WHERE id = #{id}
+    </select>
+
+    <select id="pageList" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List" />
+        FROM article
+        <where>
+            <if test="title!=null and title!=''">
+                and title like CONCAT('%',#{title},'%')
+            </if>
+
+            <if test="typeId!=null">
+                and type_id=#{typeId}
+            </if>
+
+            <if test="content!=null and content!=''">
+                and content like CONCAT('%',#{content},'%')
+            </if>
+
+            <if test="status!=null">
+                and status=#{status}
+            </if>
+
+            <if test="isRecommend!=null">
+                and is_recommend=#{isRecommend}
+            </if>
+            and status!=0
+        </where>
+        order by id desc
+    </select>
+
+    <select id="pageListCount" resultType="java.lang.Integer">
+        SELECT count(1)
+        FROM article
+    </select>
+    <select id="total" resultType="java.lang.Long">
+        SELECT count(id) from article where status=2
+    </select>
+
+</mapper>

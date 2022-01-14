@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mugu.blog.article.dao.MqMsgMapper">
+
+    <resultMap id="BaseResultMap" type="com.mugu.blog.article.mq.model.MqMsg" >
+        <result column="id" property="id" />
+        <result column="msg" property="msg" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+        <result column="status" property="status" />
+        <result column="exchange" property="exchange" />
+        <result column="queue" property="queue" />
+        <result column="routing_key" property="routingKey" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+                id,
+                msg,
+                create_time,
+                update_time,
+                status,
+                exchange,
+                queue,
+                routing_key
+    </sql>
+
+    <insert id="insert" useGeneratedKeys="true" keyColumn="id" keyProperty="id" parameterType="com.mugu.blog.article.mq.model.MqMsg">
+        INSERT INTO mq_msg
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="null != msg and '' != msg">
+                msg,
+            </if>
+            <if test="null != createTime ">
+                create_time,
+            </if>
+            <if test="null != updateTime">
+                update_time,
+            </if>
+            <if test="null != status ">
+                status,
+            </if>
+            <if test="null != exchange and '' != exchange">
+                exchange,
+            </if>
+            <if test="null != queue and '' != queue">
+                queue,
+            </if>
+            <if test="null != routingKey and '' != routingKey">
+                routing_key
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="null != msg and '' != msg">
+                #{msg},
+            </if>
+            <if test="null != createTime ">
+                #{createTime},
+            </if>
+            <if test="null != updateTime">
+                #{updateTime},
+            </if>
+            <if test="null != status ">
+                #{status},
+            </if>
+            <if test="null != exchange and '' != exchange">
+                #{exchange},
+            </if>
+            <if test="null != queue and '' != queue">
+                #{queue},
+            </if>
+            <if test="null != routingKey and '' != routingKey">
+                #{routingKey}
+            </if>
+        </trim>
+    </insert>
+
+    <delete id="delete" >
+        DELETE FROM mq_msg
+        WHERE id = #{id}
+    </delete>
+
+    <update id="update" parameterType="com.mugu.blog.article.mq.model.MqMsg">
+        UPDATE mq_msg
+        <set>
+            <if test="null != msg and '' != msg">msg = #{msg},</if>
+            <if test="null != createTime ">create_time = #{createTime},</if>
+            <if test="null != updateTime">update_time = #{updateTime},</if>
+            <if test="null != status ">status = #{status},</if>
+            <if test="null != exchange and '' != exchange">exchange = #{exchange},</if>
+            <if test="null != queue and '' != queue">queue = #{queue},</if>
+            <if test="null != routingKey and '' != routingKey">routing_key = #{routingKey},</if>
+            send_num=send_num+1
+        </set>
+        WHERE id = #{id}
+    </update>
+
+
+    <select id="load" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List" />
+        FROM mq_msg
+        WHERE id = #{id}
+    </select>
+
+    <select id="pageList" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List" />
+        FROM mq_msg
+        LIMIT #{offset}, #{pageSize}
+    </select>
+
+    <select id="pageListCount" resultType="java.lang.Integer">
+        SELECT count(1)
+        FROM mq_msg
+    </select>
+
+    <select id="listNoSendSuccess" resultType="com.mugu.blog.article.mq.model.MqMsg">
+        SELECT * from mq_msg where (status=0 or status=3) and send_num <![CDATA[<=]]>5
+    </select>
+
+</mapper>

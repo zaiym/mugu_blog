@@ -11,6 +11,7 @@
 
     <artifactId>blog-datasource-starter</artifactId>
 
+    <description>Druid数据源starter</description>
 
     <dependencies>
         <!-- mysql -->

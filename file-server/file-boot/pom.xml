@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>file-server</artifactId>
+        <groupId>com.mugu.blog</groupId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>file-boot</artifactId>
+
+    <description>文件服务</description>
+
+    <dependencies>
+        <!--nacos注册中心-->
+        <dependency>
+            <groupId>com.mugu.blog</groupId>
+            <artifactId>blog-nacos-starter</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.mugu.blog</groupId>
+            <artifactId>blog-seata-starter</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.mugu.blog</groupId>
+            <artifactId>blog-common-starter</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.mugu.blog</groupId>
+            <artifactId>blog-skywalking-starter</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.mugu.blog</groupId>
+            <artifactId>blog-mybatis-starter</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.mugu.blog</groupId>
+            <artifactId>file-server-common</artifactId>
+        </dependency>
+
+        <!--sftp文件上传-->
+        <dependency>
+            <groupId>com.jcraft</groupId>
+            <artifactId>jsch</artifactId>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <finalName>blog-file-server</finalName>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <jvmArguments>-Dfile.encoding=UTF-8</jvmArguments>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

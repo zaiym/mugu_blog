@@ -22,8 +22,24 @@
 		sys_user_role sur
 		INNER JOIN sys_user su ON su.id = sur.user_id
 	WHERE
-		su.user_id = #{userId}
+		su.id = #{userId}
 		AND sr.id = sur.role_id
 		)
     </select>
+    <select id="selectByUserId" resultType="com.mugu.blog.user.common.po.SysUser">
+		SELECT
+	user_id,
+	username,
+	nickname,
+	avatar,
+	gender,
+	avatar,
+	mobile,
+	email
+FROM
+	sys_user
+WHERE
+	user_id = #{userId}
+	AND STATUS =1
+	</select>
 </mapper>

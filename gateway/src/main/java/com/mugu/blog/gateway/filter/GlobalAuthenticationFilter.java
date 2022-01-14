@@ -9,11 +9,13 @@ import com.mugu.blog.core.model.oauth.OAuthConstant;
 import com.mugu.blog.gateway.model.WhiteUrls;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.codehaus.jackson.map.ser.std.ObjectArraySerializer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.core.Ordered;
 import org.springframework.core.io.buffer.DataBuffer;
+//import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.server.reactive.ServerHttpRequest;
@@ -29,6 +31,7 @@ import reactor.core.publisher.Mono;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * @author 公众号：码猿技术专栏
@@ -81,7 +84,7 @@ public class GlobalAuthenticationFilter implements GlobalFilter, Ordered {
             String jti=additionalInformation.get(OAuthConstant.JTI).toString();
             /**查看黑名单中是否存在这个jti，如果存在则这个令牌不能用****/
             Boolean hasKey = stringRedisTemplate.hasKey(OAuthConstant.JTI_KEY_PREFIX + jti);
-            if (hasKey)
+            if (Objects.requireNonNull(hasKey))
                 return invalidTokenMono(exchange);
             //取出用户身份信息
             String user_name = additionalInformation.get("user_name").toString();
@@ -94,6 +97,7 @@ public class GlobalAuthenticationFilter implements GlobalFilter, Ordered {
             String avatar = additionalInformation.get(OAuthConstant.AVATAR).toString();
             String mobile = additionalInformation.get(OAuthConstant.MOBILE).toString();
             String email = additionalInformation.get(OAuthConstant.EMAIL).toString();
+
             JSONObject jsonObject=new JSONObject();
             jsonObject.put(OAuthConstant.PRINCIPAL_NAME, user_name);
             jsonObject.put(OAuthConstant.AUTHORITIES_NAME,authorities);

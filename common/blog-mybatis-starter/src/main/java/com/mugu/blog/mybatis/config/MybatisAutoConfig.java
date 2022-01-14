@@ -4,8 +4,10 @@ import com.mugu.blog.datasource.config.DataSourceAutoConfig;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.SqlSessionTemplate;
+import org.mybatis.spring.boot.autoconfigure.MybatisAutoConfiguration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
+import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
@@ -19,6 +21,7 @@ import javax.sql.DataSource;
 @Configuration
 @EnableTransactionManagement
 @EnableAspectJAutoProxy
+@AutoConfigureBefore(value = {MybatisAutoConfiguration.class})
 @AutoConfigureAfter(value = {DataSourceAutoConfig.class})
 public class MybatisAutoConfig {
 
@@ -36,14 +39,7 @@ public class MybatisAutoConfig {
         configuration.setDefaultFetchSize(100);
         configuration.setDefaultStatementTimeout(30);
         sqlSessionFactoryBean.setConfiguration(configuration);
-        //将typehandler注册到mybatis
-//        sqlSessionFactoryBean.setTypeHandlers(typeHandlers());
         return sqlSessionFactoryBean.getObject();
-    }
-
-    @Bean(value = "sqlSession")
-    public SqlSessionTemplate sqlSessionTemplate(SqlSessionFactory sqlSessionFactory) {
-        return new SqlSessionTemplate(sqlSessionFactory);
     }
 
 

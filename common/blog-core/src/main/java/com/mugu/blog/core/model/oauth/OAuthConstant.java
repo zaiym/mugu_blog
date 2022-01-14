@@ -1,5 +1,7 @@
 package com.mugu.blog.core.model.oauth;
 
+import com.mugu.blog.core.constant.KeyConstant;
+
 public class OAuthConstant {
     public final static String TOKEN_NAME="jwt-token";
 
@@ -22,12 +24,12 @@ public class OAuthConstant {
     /**
      * 权限<->url对应的KEY
      */
-    public final static String OAUTH_URLS="oauth2:oauth_urls";
+    public final static String OAUTH_URLS= KeyConstant.REDIS_KEY_PREFIX+"oauth2:oauth_urls";
 
     /**
      * JWT令牌黑名单的KEY
      */
-    public final static String JTI_KEY_PREFIX="oauth2:black:";
+    public final static String JTI_KEY_PREFIX=KeyConstant.REDIS_KEY_PREFIX+"oauth2:black:";
 
     /**
      * 角色前缀
@@ -36,6 +38,6 @@ public class OAuthConstant {
 
     public final static String METHOD_SUFFIX=":";
 
-    public final static String ROLE_ROOT_CODE="ROLE_ROOT";
+    public final static String ROLE_ROOT_CODE=ROLE_PREFIX+"ROOT";
 
 }

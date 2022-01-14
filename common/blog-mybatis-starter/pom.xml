@@ -9,6 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>blog-mybatis-starter</artifactId>
+    <description>Mybatis的starter</description>
 
     <dependencies>
         <dependency>
@@ -25,6 +26,17 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-aop</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.mugu.blog</groupId>
+            <artifactId>blog-core</artifactId>
+        </dependency>
+
+        <!--        分页插件-->
+        <dependency>
+            <groupId>com.github.pagehelper</groupId>
+            <artifactId>pagehelper-spring-boot-starter</artifactId>
         </dependency>
     </dependencies>
 </project>

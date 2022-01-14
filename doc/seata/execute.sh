@@ -1,0 +1,1 @@
+nohup bash seata-server.sh -p 8849 -h 47.111.0.135 &

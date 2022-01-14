@@ -2,6 +2,8 @@ package com.mugu.blog.core.model;
 
 import lombok.Data;
 
+import java.util.Objects;
+
 @Data
 public class ResultMsg<T> {
     private Integer code;
@@ -18,10 +20,14 @@ public class ResultMsg<T> {
         return new ResultMsg<>(ResultCode.UNAUTHORIZED.getCode(),ResultCode.UNAUTHORIZED.getMsg(),null);
     }
 
-    public static  ResultMsg resultFail(Integer code,String msg){
+    public static <T>  ResultMsg<T> resultFail(Integer code,String msg){
         return new ResultMsg<>(code,msg,null);
     }
 
+
+    public static boolean isSuccess(ResultMsg<?> resultMsg){
+        return Objects.nonNull(resultMsg)&&resultMsg.getCode().equals(ResultCode.REQUEST_SUCCESS.getCode());
+    }
 
     public static <T> ResultMsg<T> resultSuccess(T data){
         return new ResultMsg(ResultCode.REQUEST_SUCCESS.getCode(),ResultCode.REQUEST_SUCCESS.getMsg(),data);

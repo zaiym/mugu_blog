@@ -11,11 +11,18 @@
 
     <artifactId>user-api</artifactId>
 
+    <description>用户服务对外的feign接口</description>
+
     <dependencies>
 <!--        feign的依赖-->
         <dependency>
             <groupId>com.mugu.blog</groupId>
             <artifactId>blog-feign-starter</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.mugu.blog</groupId>
+            <artifactId>blog-sentinel-starter</artifactId>
         </dependency>
 
         <dependency>

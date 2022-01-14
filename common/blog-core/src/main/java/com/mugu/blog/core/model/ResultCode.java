@@ -10,8 +10,22 @@ public enum ResultCode {
     UNSUPPORTED_GRANT_TYPE(1003, "不支持的认证模式"),
     NO_PERMISSION(1005,"无权限访问！"),
     UNAUTHORIZED(401, "系统错误"),
+
     INVALID_TOKEN(1004,"无效的token"),
-    REQUEST_SUCCESS(200,"请求成功！");
+    REQUEST_SUCCESS(200,"请求成功！"),
+
+    SERVICE_EXCEPTION(2000,"业务处理异常！"),
+    PARAMETER_FAIL(2001,"参数错误！"),
+    ARTICLE_NOT_EXIST(2002,"文章不存在！"),
+    ARTICLE_NO_PAGE(2003,"别再翻了，没有文章了！"),
+    ARTICLE_NO_SEARCH(2004,"不好意思，没有你想要的结果o(╥﹏╥)o"),
+    COMMENT_NOT_EXIST(2005,"回复的评论不存在！"),
+
+    SERVER_FALLBACK(3001,"服务降级了........"),
+
+    NO_REPEATABLE_SUBMIT(3002,"请勿重复提交........"),
+
+    FILE_MUCH_MAX(4001,"文件过大，请压缩后再上传！");
 
 
 

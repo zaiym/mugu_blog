@@ -6,6 +6,8 @@ import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.AutoConfigureBefore;
+import org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration;
 import org.springframework.cache.interceptor.KeyGenerator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,7 +25,11 @@ import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 
+/**
+ * 一定要在RedisAutoConfiguration配置，否则自定义的RedisTemplate不生效
+ */
 @Configuration
+@AutoConfigureBefore(value = {RedisAutoConfiguration.class})
 public class RedisAutoConfig {
     @Value("${spring.redis.host:127.0.0.1}")
     private String host;

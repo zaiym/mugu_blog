@@ -10,6 +10,8 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>user-boot</artifactId>
+
+    <description>用户服务</description>
     <dependencies>
         <!--        mybatis-->
         <dependency>
@@ -17,15 +19,20 @@
             <artifactId>blog-mybatis-starter</artifactId>
         </dependency>
 
+
         <dependency>
             <groupId>com.mugu.blog</groupId>
             <artifactId>user-common</artifactId>
         </dependency>
 
-        <!--nacos注册中心-->
         <dependency>
-            <groupId>com.alibaba.cloud</groupId>
-            <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+            <groupId>com.mugu.blog</groupId>
+            <artifactId>blog-nacos-starter</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.mugu.blog</groupId>
+            <artifactId>blog-seata-starter</artifactId>
         </dependency>
 
         <dependency>
@@ -37,10 +44,26 @@
             <groupId>com.mugu.blog</groupId>
             <artifactId>blog-common-starter</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>com.mugu.blog</groupId>
+            <artifactId>blog-skywalking-starter</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.mugu.blog</groupId>
+            <artifactId>blog-redis-starter</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.mugu.blog</groupId>
+            <artifactId>blog-monitor-client-starter</artifactId>
+        </dependency>
+
     </dependencies>
 
     <build>
-        <finalName>user-boot</finalName>
+        <finalName>blog-user-boot</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
@@ -48,6 +71,13 @@
                 <configuration>
                     <jvmArguments>-Dfile.encoding=UTF-8</jvmArguments>
                 </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

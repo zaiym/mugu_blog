@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mugu.blog.friendlinks.dao.FriendLinksMapper">
+
+    <resultMap id="BaseResultMap" type="com.mugu.blog.friend.links.common.model.po.FriendLinks" >
+        <result column="id" property="id" />
+        <result column="blog_name" property="blogName" />
+        <result column="blog_url" property="blogUrl" />
+        <result column="image_url" property="imageUrl" />
+        <result column="status" property="status" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+                id,
+                blog_name,
+                blog_url,
+                image_url,
+                status,
+                create_time,
+                update_time
+    </sql>
+
+    <insert id="insert" useGeneratedKeys="true" keyColumn="id" keyProperty="id" parameterType="com.mugu.blog.friend.links.common.model.po.FriendLinks">
+        INSERT INTO friendlinks
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="null != blogName and '' != blogName">
+                blog_name,
+            </if>
+            <if test="null != blogUrl and '' != blogUrl">
+                blog_url,
+            </if>
+            <if test="null != imageUrl and '' != imageUrl">
+                image_url,
+            </if>
+            <if test="null != status ">
+                status,
+            </if>
+            <if test="null != createTime">
+                create_time,
+            </if>
+            <if test="null != updateTime">
+                update_time
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="null != blogName and '' != blogName">
+                #{blogName},
+            </if>
+            <if test="null != blogUrl and '' != blogUrl">
+                #{blogUrl},
+            </if>
+            <if test="null != imageUrl and '' != imageUrl">
+                #{imageUrl},
+            </if>
+            <if test="null != status ">
+                #{status},
+            </if>
+            <if test="null != createTime">
+                #{createTime},
+            </if>
+            <if test="null != updateTime">
+                #{updateTime}
+            </if>
+        </trim>
+    </insert>
+
+    <delete id="delete" >
+        DELETE FROM friendlinks
+        WHERE id = #{id}
+    </delete>
+
+    <update id="update" parameterType="com.mugu.blog.friend.links.common.model.po.FriendLinks">
+        UPDATE friendlinks
+        <set>
+            <if test="null != blogName and '' != blogName">blog_name = #{blogName},</if>
+            <if test="null != blogUrl and '' != blogUrl">blog_url = #{blogUrl},</if>
+            <if test="null != imageUrl and '' != imageUrl">image_url = #{imageUrl},</if>
+            <if test="null != status ">status = #{status},</if>
+            <if test="null != createTime">create_time = #{createTime},</if>
+            <if test="null != updateTime">update_time = #{updateTime}</if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+
+    <select id="load" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List" />
+        FROM friendlinks
+        WHERE id = #{id}
+    </select>
+
+    <select id="pageList" resultType="com.mugu.blog.friend.links.common.model.vo.FriendLinksVo">
+        SELECT <include refid="Base_Column_List" />
+        FROM friendlinks where status=1 order by id desc
+    </select>
+
+    <select id="pageListCount" resultType="java.lang.Integer">
+        SELECT count(1)
+        FROM friendlinks
+    </select>
+
+</mapper>

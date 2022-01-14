@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mugu.blog.picture.dao.PictureMapper">
+
+    <resultMap id="BaseResultMap" type="com.mugu.blog.picture.common.model.po.Picture" >
+        <result column="id" property="id" />
+        <result column="name" property="name" />
+        <result column="location" property="location" />
+        <result column="url" property="url" />
+        <result column="md5" property="md5" />
+        <result column="description" property="description" />
+        <result column="user_id" property="userId" />
+        <result column="status" property="status" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+                id,
+                name,
+                location,
+                url,
+                md5,
+                description,
+                user_id,
+                status,
+                create_time,
+                update_time
+    </sql>
+
+    <insert id="insert" useGeneratedKeys="true" keyColumn="id" keyProperty="id" parameterType="com.mugu.blog.picture.common.model.po.Picture">
+        INSERT INTO picture
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="null != name and '' != name">
+                name,
+            </if>
+            <if test="null != location and '' != location">
+                location,
+            </if>
+            <if test="null != url and '' != url">
+                url,
+            </if>
+            <if test="null != md5 and '' != md5">
+                md5,
+            </if>
+            <if test="null != description and '' != description">
+                description,
+            </if>
+            <if test="null != userId and '' != userId">
+                user_id,
+            </if>
+            <if test="null != status">
+                status,
+            </if>
+            <if test="null != createTime">
+                create_time,
+            </if>
+            <if test="null != updateTime">
+                update_time
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="null != name and '' != name">
+                #{name},
+            </if>
+            <if test="null != location and '' != location">
+                #{location},
+            </if>
+            <if test="null != url and '' != url">
+                #{url},
+            </if>
+            <if test="null != md5 and '' != md5">
+                #{md5},
+            </if>
+            <if test="null != description and '' != description">
+                #{description},
+            </if>
+            <if test="null != userId and '' != userId">
+                #{userId},
+            </if>
+            <if test="null != status">
+                #{status},
+            </if>
+            <if test="null != createTime">
+                #{createTime},
+            </if>
+            <if test="null != updateTime">
+                #{updateTime}
+            </if>
+        </trim>
+    </insert>
+
+    <delete id="delete" >
+        DELETE FROM picture
+        WHERE id = #{id}
+    </delete>
+
+    <update id="update" parameterType="com.mugu.blog.picture.common.model.po.Picture">
+        UPDATE picture
+        <set>
+            <if test="null != name and '' != name">name = #{name},</if>
+            <if test="null != location and '' != location">location = #{location},</if>
+            <if test="null != url and '' != url">url = #{url},</if>
+            <if test="null != md5 and '' != md5">md5 = #{md5},</if>
+            <if test="null != description and '' != description">description = #{description},</if>
+            <if test="null != userId and '' != userId">user_id = #{userId},</if>
+            <if test="null != status">status = #{status},</if>
+            <if test="null != createTime">create_time = #{createTime},</if>
+            <if test="null != updateTime">update_time = #{updateTime}</if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+
+    <select id="load" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List" />
+        FROM picture
+        WHERE id = #{id}
+    </select>
+
+    <select id="pageList" resultType="com.mugu.blog.picture.common.model.vo.PictureVo">
+        SELECT
+	id,
+	NAME,
+	location,
+	url,
+	description,
+	create_time  as createTime
+FROM
+	picture
+WHERE
+	STATUS =1 order by id desc
+    </select>
+
+    <select id="pageListCount" resultType="java.lang.Integer">
+        SELECT count(1)
+        FROM picture
+    </select>
+    <select id="selectByMd5" resultType="java.lang.String">
+        SELECT url from picture where md5=#{md5} limit 1
+    </select>
+
+</mapper>
