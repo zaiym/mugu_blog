@@ -55,6 +55,11 @@
             <groupId>com.jcraft</groupId>
             <artifactId>jsch</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>com.mugu.blog</groupId>
+            <artifactId>blog-monitor-client-starter</artifactId>
+        </dependency>
     </dependencies>
 
     <build>

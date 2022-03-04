@@ -8,10 +8,7 @@ import org.springframework.security.web.authentication.SavedRequestAwareAuthenti
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 
 /**
- * @PROJECT_NAME: 杭州品茗信息技术有限公司
- * @DESCRIPTION:
- * @author: 徐子木
- * @DATE: 2021/1/4 4:26 下午
+ * Security的配置信息
  */
 @Configuration
 public class SecuritySecureConfig extends WebSecurityConfigurerAdapter {
@@ -31,7 +28,7 @@ public class SecuritySecureConfig extends WebSecurityConfigurerAdapter {
 
         http.authorizeRequests()
                 //静态文件允许访问
-                .antMatchers(adminContextPath + "/assets/**").permitAll()
+                .antMatchers(adminContextPath + "/assets/**","/actuator/**","/instances/**").permitAll()
                 //登录页面允许访问
                 .antMatchers(adminContextPath + "/login","/css/**","/js/**","/image/*").permitAll()
                 //其他所有请求需要登录

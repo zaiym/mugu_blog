@@ -38,7 +38,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         //todo 允许表单登录
         http.authorizeRequests()
                 //注销的接口需要放行
-                .antMatchers("/oauth/logout").permitAll()
+                ///actuator/**、/instances/** 这两个是spring boot admin需要的接口，需要放行
+                .antMatchers("/oauth/logout","/actuator/**","/instances/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()

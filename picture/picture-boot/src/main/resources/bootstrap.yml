@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: dev
+    active: prod
   application:
     name: blog-picture
   cloud:
@@ -14,7 +14,22 @@ spring:
         username: nacos
         password: nacos
         ## 指定命名空间
-        namespace: f445027c-f612-47c0-a82c-f52134e9a66d
+        namespace: cbe01a03-5b3f-40f3-a796-9b93f089a680
+        ## 共享配置，List集合，可以配置多个
+        shared-configs:
+          ## dataId：配置文件的dataId，必须带有后缀
+          - dataId: share-nacos-registry.yaml
+            ## refresh：指定是否能够动态刷新，默认是false
+            refresh: true
+            ## actuator端点的配置
+          - dataId: share-actuator.yaml
+            refresh: true
+            ## 分页插件的配置
+          - dataId: share.pagehelper.yaml
+            refresh: true
+          - dataId: share-seata.yaml
+            refresh: true
+
 server:
   servlet:
     context-path: /${spring.application.name}

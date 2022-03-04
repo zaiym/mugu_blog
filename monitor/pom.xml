@@ -45,6 +45,11 @@
             <groupId>com.mugu.blog</groupId>
             <artifactId>blog-skywalking-starter</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>com.mugu.blog</groupId>
+            <artifactId>blog-monitor-client-starter</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
