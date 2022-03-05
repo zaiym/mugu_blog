@@ -32,3 +32,14 @@ spring:
 server:
   servlet:
     context-path: /${spring.application.name}
+## 日志相关设置
+logging:
+  level:
+    io:
+      seata: warn
+    com:
+      alibaba:
+        nacos: warn
+  ## 配置spring boot admin 查看日志的位置
+  file:
+    name: logs/${spring.application.name}_error.log

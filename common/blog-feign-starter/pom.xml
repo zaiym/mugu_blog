@@ -34,5 +34,15 @@
             <artifactId>feign-httpclient</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.mugu.blog</groupId>
+            <artifactId>blog-core</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-web</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
     </dependencies>
 </project>

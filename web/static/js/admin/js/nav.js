@@ -13,7 +13,7 @@ function logout() {
             "Authorization":"Bearer "+accessToken
         },
         data: JSON.stringify({}),
-        url: sessionStorage.getItem("requestUrl") + "/oauth/logout",
+        url: sessionStorage.getItem("requestUrl") + "/blog-auth-server/oauth/logout",
         contentType:"application/json;charset=utf-8",
         async: false,
         success: function (res) {

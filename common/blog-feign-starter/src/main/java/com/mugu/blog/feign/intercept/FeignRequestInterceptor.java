@@ -1,5 +1,7 @@
 package com.mugu.blog.feign.intercept;
 
+import cn.hutool.core.util.StrUtil;
+import com.mugu.blog.core.model.oauth.OAuthConstant;
 import com.mugu.blog.feign.utils.RequestContextUtils;
 import feign.RequestInterceptor;
 import feign.RequestTemplate;
@@ -36,7 +38,10 @@ public class FeignRequestInterceptor implements RequestInterceptor {
             while (enumeration.hasMoreElements()) {
                 String key = enumeration.nextElement();
                 String value = request.getHeader(key);
-                map.put(key, value);
+                if (StrUtil.equals(OAuthConstant.TOKEN_NAME,key)){
+                    map.put(key, value);
+                    break;
+                }
             }
         }
         return map;

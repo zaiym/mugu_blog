@@ -24,3 +24,14 @@ spring:
             ## actuator端点的配置
           - dataId: share-actuator.yaml
             refresh: true
+## 日志相关设置
+logging:
+  level:
+    io:
+      seata: warn
+    com:
+      alibaba:
+        nacos: warn
+  ## 配置spring boot admin 查看日志的位置
+  file:
+    name: logs/${spring.application.name}_error.log

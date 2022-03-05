@@ -26,7 +26,7 @@ $('#login').click(function () {
     $.ajax({
         type : "POST",
         data:{ username: username, password: password,client_id:"myjszl",client_secret:"123",grant_type:"password" },
-        url : sessionStorage.getItem("requestUrl")+"/oauth/token",
+        url : sessionStorage.getItem("requestUrl")+"/blog-auth-server/oauth/token",
         async: false,
         success : function (data) {
             //跳转到后台首页
