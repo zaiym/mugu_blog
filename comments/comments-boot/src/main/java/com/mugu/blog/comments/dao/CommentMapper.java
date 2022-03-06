@@ -33,7 +33,7 @@ public interface CommentMapper {
     * 查询 根据主键 id 查询
     * @date 2022/01/24
     **/
-    Comment load(Long id);
+    Comment load(String commentId);
 
     /**
     * 查询 分页查询

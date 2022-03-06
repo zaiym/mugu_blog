@@ -14,6 +14,9 @@ public class ArticleVo {
     @ApiModelProperty(value ="id")
     private Long id;
 
+    @ApiModelProperty(value = "唯一ID")
+    private String articleId;
+
     /**
      * 作者userid
      */

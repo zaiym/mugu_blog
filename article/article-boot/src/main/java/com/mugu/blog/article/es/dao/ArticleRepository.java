@@ -8,4 +8,6 @@ import org.springframework.data.elasticsearch.repository.ElasticsearchRepository
 public interface ArticleRepository extends ElasticsearchRepository<ArticleEs,String> {
 
     Page<ArticleEs> findByContentLikeOrTitleLike(String content, String title, Pageable pageable);
+
+    void deleteByArticleId(String articleId);
 }

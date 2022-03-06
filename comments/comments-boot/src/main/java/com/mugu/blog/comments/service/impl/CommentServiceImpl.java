@@ -5,10 +5,12 @@ import com.mugu.blog.comments.common.model.po.Comment;
 import com.mugu.blog.comments.common.model.req.CommentAddReq;
 import com.mugu.blog.comments.common.model.req.CommentListReq;
 import com.mugu.blog.comments.common.model.vo.CommentVo;
+import com.mugu.blog.comments.common.model.vo.TotalVo;
 import com.mugu.blog.comments.dao.CommentMapper;
 import com.mugu.blog.comments.service.CommentService;
 import com.mugu.blog.common.utils.AssertUtils;
 import com.mugu.blog.core.model.ResultCode;
+import com.mugu.blog.core.utils.SnowflakeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,6 +41,7 @@ public class CommentServiceImpl implements CommentService {
         comment.setCreateTime(new Date());
         comment.setUpdateTime(new Date());
         comment.setStatus(1);
+        comment.setCommentId(String.valueOf(SnowflakeUtil.nextId()));
         mapper.insert(comment);
     }
 
@@ -57,7 +60,7 @@ public class CommentServiceImpl implements CommentService {
             CommentVo vo = new CommentVo();
             BeanUtil.copyProperties(comment,vo);
             //获取子评论
-            List<CommentVo> cList = comments.stream().filter(p -> Objects.nonNull(p.getPid())&&p.getPid().equals(comment.getId()))
+            List<CommentVo> cList = comments.stream().filter(p -> Objects.nonNull(p.getPid())&&p.getPid().equals(comment.getCommentId()))
                     .map(p -> {
                         CommentVo child = new CommentVo();
                         BeanUtil.copyProperties(p, child);
@@ -73,5 +76,19 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public Long total(CommentListReq param) {
         return mapper.totalComment(param);
+    }
+
+    @Override
+    public List<TotalVo> listTotal(List<CommentListReq> params) {
+        List<TotalVo> list=new ArrayList<>();
+        for (CommentListReq param : params) {
+            //无事务，直接调用
+            Long total = this.total(param);
+            TotalVo totalVo = new TotalVo();
+            totalVo.setTotal(total);
+            totalVo.setArticleId(param.getArticleId());
+            list.add(totalVo);
+        }
+        return list;
     }
 }

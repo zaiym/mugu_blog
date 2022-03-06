@@ -22,6 +22,7 @@ import com.mugu.blog.article.service.SendMsgService;
 import com.mugu.blog.article.service.TypeService;
 import com.mugu.blog.comments.api.feign.CommentFeign;
 import com.mugu.blog.comments.common.model.req.CommentListReq;
+import com.mugu.blog.comments.common.model.vo.TotalVo;
 import com.mugu.blog.common.utils.AssertUtils;
 import com.mugu.blog.core.utils.OauthUtils;
 import com.mugu.blog.core.utils.RequestContextUtils;
@@ -31,9 +32,11 @@ import com.mugu.blog.core.model.PageData;
 import com.mugu.blog.core.model.ResultCode;
 import com.mugu.blog.core.model.ResultMsg;
 import com.mugu.blog.core.utils.IpUtils;
+import com.mugu.blog.core.utils.SnowflakeUtil;
 import com.mugu.blog.mybatis.config.utils.PageUtils;
 import com.mugu.blog.user.api.feign.UserFeign;
 import com.mugu.blog.user.common.po.SysUser;
+import org.apache.commons.lang3.StringUtils;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
@@ -56,6 +59,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class ArticleServiceImpl implements ArticleService {
@@ -93,6 +97,7 @@ public class ArticleServiceImpl implements ArticleService {
         article.setAuthorId(OauthUtils.getCurrentUser().getUserId());
         article.setCreateTime(new Date());
         article.setUpdateTime(new Date());
+        article.setArticleId(String.valueOf(SnowflakeUtil.nextId()));
         //阅读人数
         article.setViewNum(0L);
         int i = articleMapper.insert(article);
@@ -100,10 +105,12 @@ public class ArticleServiceImpl implements ArticleService {
 
         ArticleMq articleMq = new ArticleMq();
         BeanUtils.copyProperties(article,articleMq);
-        //新增
-        articleMq.setFlag(1);
-        //发送消息给MQ
-        sendMsgService.sendMsg(RabbitMqConfig.EXCHANGE_NAME,RabbitMqConfig.ROUTING_KEY, JSON.toJSONString(articleMq));
+        if (Integer.valueOf(2).equals(req.getStatus())){
+            //新增
+            articleMq.setFlag(1);
+            //发送消息给MQ
+            sendMsgService.sendMsg(RabbitMqConfig.EXCHANGE_NAME,RabbitMqConfig.ROUTING_KEY, JSON.toJSONString(articleMq));
+        }
     }
 
     @Override
@@ -116,29 +123,47 @@ public class ArticleServiceImpl implements ArticleService {
         PageData<ArticleVo> data = new PageData<>();
         data.setPages(articlePage.getPages());
         data.setTotal(articlePage.getTotal());
+        /**
+         * TODO 优化点一：此处需要优化，不能循环调用服务
+         * 将条件以List方式传入，一次调用获取集合，然后聚合
+         */
+        List<Article> articles = articlePage.getResult();
+        //获取所有的作者ID
+        List<String> authorIds = articles.stream().map(Article::getAuthorId).collect(Collectors.toList());
+        //获取所有的文章ID
+        List<CommentListReq> params = articles.stream().map(p->{
+            CommentListReq param = new CommentListReq();
+            param.setArticleId(p.getArticleId());
+            return param;
+        }).collect(Collectors.toList());
+        List<SysUser> sysUsers=new ArrayList<>();
+        List<TotalVo> commentVos=new ArrayList<>();
+        //调用user服务获取作者信息
+        ResultMsg<List<SysUser>> authorRes = userFeign.listByUserId(authorIds);
+        if (ResultMsg.isSuccess(authorRes)&&authorRes.getData()!=null){
+            sysUsers=authorRes.getData();
+        }
+
+        //调用评论信息获取评论总数
+        ResultMsg<List<TotalVo>> commentRes = commentFeign.listTotal(params);
+        if (ResultMsg.isSuccess(commentRes)&&commentRes.getData()!=null){
+            commentVos=commentRes.getData();
+        }
+
         for (Article article : articlePage.getResult()) {
             ArticleVo vo = new ArticleVo();
             BeanUtil.copyProperties(article, vo);
-            //获取作者的名称、头像
-            ResultMsg<SysUser> userRes = userFeign.getByUserId(article.getAuthorId());
 
-            if (ResultMsg.isSuccess(userRes)&&userRes.getData()!=null){
-                vo.setAuthorName(userRes.getData().getNickname());
-                vo.setAuthorAvatar(userRes.getData().getAvatar());
-            }
-            //获取分类的名称
-            Type type = typeService.getById(article.getTypeId());
-            if (Objects.nonNull(type)){
-                vo.setTypeName(type.getName());
-                vo.setTypeId(article.getTypeId());
-            }
+            //作者相关信息
+            sysUsers.stream().filter(p-> StrUtil.equals(article.getAuthorId(),p.getUserId())).limit(1).peek(p->{
+                vo.setAuthorName(p.getNickname());
+                vo.setAuthorAvatar(p.getAvatar());
+            }).collect(Collectors.toList());
 
-            CommentListReq listReq = new CommentListReq();
-            listReq.setArticleId(article.getId());
-            ResultMsg<Long> commentRes = commentFeign.total(listReq);
-            if (ResultMsg.isSuccess(commentRes)){
-                vo.setCommentNum(commentRes.getData());
-            }
+            //评论
+            commentVos.stream().filter(p-> StrUtil.equals(article.getArticleId(),p.getArticleId())).limit(1).peek(p-> vo.setCommentNum(p.getTotal())).collect(Collectors.toList());
+
+            vo.setViewNum(stringRedisTemplate.opsForHyperLogLog().size(KeyConstant.ARTICLE_V+article.getArticleId()));
 
             articleVos.add(vo);
         }
@@ -155,7 +180,7 @@ public class ArticleServiceImpl implements ArticleService {
         for (ArticleDelReq param : params) {
             //发送消息删除es中的文章
             ArticleMq articleMq = new ArticleMq();
-            articleMq.setId(param.getId());
+            articleMq.setArticleId(param.getId());
             articleMq.setFlag(3);
             sendMsgService.sendMsg(RabbitMqConfig.EXCHANGE_NAME,RabbitMqConfig.ROUTING_KEY, JSON.toJSONString(articleMq));
         }
@@ -185,15 +210,15 @@ public class ArticleServiceImpl implements ArticleService {
 
         //获取评论总数
         CommentListReq listReq = new CommentListReq();
-        listReq.setArticleId(article.getId());
+        listReq.setArticleId(article.getArticleId());
         ResultMsg<Long> commentRes = commentFeign.total(listReq);
         if (ResultMsg.isSuccess(commentRes)){
             vo.setCommentNum(commentRes.getData());
         }
 
         //统计阅读量,这里对精度没要求，使用HyperLogLog，而不是使用SET了
-        stringRedisTemplate.opsForHyperLogLog().add(KeyConstant.ARTICLE_V+article.getId(), IpUtils.getIpAddress(RequestContextUtils.getRequest()));
-        vo.setViewNum(stringRedisTemplate.opsForHyperLogLog().size(KeyConstant.ARTICLE_V+article.getId()));
+        stringRedisTemplate.opsForHyperLogLog().add(KeyConstant.ARTICLE_V+article.getArticleId(), IpUtils.getIpAddress(RequestContextUtils.getRequest()));
+        vo.setViewNum(stringRedisTemplate.opsForHyperLogLog().size(KeyConstant.ARTICLE_V+article.getArticleId()));
         return vo;
     }
 

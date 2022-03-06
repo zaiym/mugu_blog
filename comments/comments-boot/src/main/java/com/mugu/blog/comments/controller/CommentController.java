@@ -4,6 +4,7 @@ import com.mugu.blog.comments.aspect.AvoidRepeatableCommit;
 import com.mugu.blog.comments.common.model.req.CommentAddReq;
 import com.mugu.blog.comments.common.model.req.CommentListReq;
 import com.mugu.blog.comments.common.model.vo.CommentVo;
+import com.mugu.blog.comments.common.model.vo.TotalVo;
 import com.mugu.blog.comments.service.CommentService;
 import com.mugu.blog.core.model.ResultMsg;
 import io.swagger.annotations.ApiOperation;
@@ -43,5 +44,11 @@ public class CommentController {
     @PostMapping(value = "/total")
     public ResultMsg<Long> total(@RequestBody @Valid CommentListReq param){
         return ResultMsg.resultSuccess(commentService.total(param));
+    }
+
+    @ApiOperation(value = "批量获取文章总数")
+    @PostMapping(value = "/list/total")
+    public ResultMsg<List<TotalVo>> listTotal(@RequestBody @Valid List<CommentListReq> param){
+        return ResultMsg.resultSuccess(commentService.listTotal(param));
     }
 }

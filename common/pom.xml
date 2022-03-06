@@ -30,7 +30,6 @@
         <module>picture-common</module>
         <module>friendlinks-common</module>
         <module>file-server-common</module>
-        <module>blog-sleuth-starter</module>
         <module>blog-async-starter</module>
         <module>blog-monitor-client-starter</module>
     </modules>

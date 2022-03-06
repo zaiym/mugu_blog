@@ -1,5 +1,6 @@
 package com.mugu.blog.user.boot.service.impl;
 
+import cn.hutool.core.collection.CollectionUtil;
 import com.mugu.blog.user.boot.dao.SysUserMapper;
 import com.mugu.blog.user.boot.service.SysUserService;
 import com.mugu.blog.user.common.po.SysRole;
@@ -29,6 +30,13 @@ public class SysUserServiceImpl implements SysUserService {
     @Override
     public SysUser getByUserId(String userId) {
         return sysUserMapper.selectByUserId(userId);
+    }
+
+    @Override
+    public List<SysUser> listByUserId(List<String> userIds) {
+        if (CollectionUtil.isEmpty(userIds))
+            return null;
+        return sysUserMapper.listByUserId(userIds);
     }
 }
 

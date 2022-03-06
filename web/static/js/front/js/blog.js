@@ -78,7 +78,7 @@ function listComments(articleId){
                     return;
                 for (var i = 0; i < list.length; i++) {
                     var str=list[i];
-                    var p="<div class=\"comment\" id='comment_"+str.id+"'>\n" +
+                    var p="<div class=\"comment\" id='comment_"+str.commentId+"'>\n" +
                         "              <a class=\"avatar\">\n" +
                         "                <img src=\"../static/images/avatar.png\">\n" +
                         "              </a>\n" +
@@ -93,14 +93,14 @@ function listComments(articleId){
                         "                <div class=\"text\">\n" +str.content+
                         "                </div>\n" +
                         "                <div class=\"actions\">\n" +
-                        "                  <a class=\"reply\" data-commentid=\"1\" data-commentnickname=\"Matt\" onclick=\"replyBtn("+str.id+")\">回复</a>\n" +
+                        "                  <a class=\"reply\" data-commentid=\"1\" data-commentnickname=\"Matt\" onclick='replyBtn("+'"'+str.commentId+'"'+")'>回复</a>\n" +
                         // "                  <a class=\"delete\" href=\"#\" onclick=\"return confirm('确定要删除该评论吗？三思啊! 删了可就没了！')\" th:if=\"${session.user}\">删除</a>\n" +
                         "                </div>\n"
                         "              </div>";
                     $("#comments").append(p);
                     var childList=str.child;
                     if (childList!=null){
-                        $("#comment_"+str.id).append("<div class=\"comments\" id='comments_"+str.id+"'>\n");
+                        $("#comment_"+str.commentId).append("<div class=\"comments\" id='comments_"+str.commentId+"'>\n");
                         for (var j = 0; j < childList.length; j++) {
                             var childStr=childList[j];
                             var child="<div class=\"comment\">\n" +
@@ -123,7 +123,7 @@ function listComments(articleId){
                                 "                    </div>\n" +
                                 "                  </div>\n" +
                                 "                </div>"+"</div>";
-                            $("#comments_"+str.id).append(child);
+                            $("#comments_"+str.commentId).append(child);
                         }
                     }
 

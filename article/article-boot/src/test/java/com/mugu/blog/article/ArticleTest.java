@@ -62,6 +62,12 @@ public class ArticleTest {
 //    private ElasticsearchTemplate elasticsearchTemplate;
 
     @Test
+    public void test7(){
+        articleRepository.deleteByArticleId("552893733540986880");
+        System.out.println(100);
+    }
+
+    @Test
     public void test6() {
         String keyword="spring";
         //根据一个值查询多个字段  并高亮显示  这里的查询是取并集，即多个字段只需要有一个字段满足即可

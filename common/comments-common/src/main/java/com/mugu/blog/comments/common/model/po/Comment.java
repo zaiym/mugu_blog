@@ -14,11 +14,14 @@ public class Comment implements Serializable {
     @ApiModelProperty(value = "主键id")
     private Long id;
 
+    @ApiModelProperty(value = "评论ID")
+    private String commentId;
+
     @ApiModelProperty(value = "内容")
     private String content;
 
     @ApiModelProperty(value = "父评论id，如果为顶级则为null")
-    private Long pid;
+    private String pid;
 
     @ApiModelProperty(value = "姓名")
     private String nickName;

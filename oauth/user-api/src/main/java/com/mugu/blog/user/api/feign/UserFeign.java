@@ -4,8 +4,10 @@ import com.mugu.blog.core.model.ResultMsg;
 import com.mugu.blog.user.api.feign.fallback.UserFeignFallback;
 import com.mugu.blog.user.common.po.SysRole;
 import com.mugu.blog.user.common.po.SysUser;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
@@ -24,4 +26,7 @@ public interface UserFeign {
 
     @GetMapping("/blog-user-boot/user/getByUserId")
     ResultMsg<SysUser> getByUserId(@RequestParam(value = "userId") String userId);
+
+    @GetMapping("/blog-user-boot/user/listByUserId")
+    ResultMsg<List<SysUser>> listByUserId(@RequestBody List<String> userIds);
 }

@@ -11,14 +11,14 @@ import com.mugu.blog.article.service.ArticleService;
 import com.mugu.blog.core.model.BaseParam;
 import com.mugu.blog.core.model.PageData;
 import com.mugu.blog.core.model.ResultMsg;
-import com.mugu.blog.picture.api.feign.admin.PictureAdminFeign;
-import com.mugu.blog.picture.common.model.req.PictureAddReq;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -57,7 +57,6 @@ public class ArticleAdminController {
     @ApiOperation("删除文章")
     @PostMapping("/del")
     public ResultMsg<Void> delById(@RequestBody @Valid List<ArticleDelReq> params){
-        log.debug("删除文章：{}", JSON.toJSONString(params));
         articleService.delById(params);
         return ResultMsg.resultSuccess();
     }

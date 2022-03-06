@@ -11,7 +11,7 @@ import javax.validation.constraints.NotNull;
 public class CommentAddReq {
 
     @ApiModelProperty(value = "父评论ID，顶层评论不填")
-    private Long pid;
+    private String pid;
 
     @ApiModelProperty(value = "文章ID",required = true)
     @NotNull(message = "文章ID不能为空")

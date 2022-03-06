@@ -9,5 +9,5 @@ import javax.validation.constraints.NotNull;
 public class ArticleInfoReq {
     @NotNull
     @ApiModelProperty(value = "文章ID",required = true)
-    private Long id;
+    private String id;
 }

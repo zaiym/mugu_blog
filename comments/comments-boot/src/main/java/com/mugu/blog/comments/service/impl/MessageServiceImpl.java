@@ -10,6 +10,7 @@ import com.mugu.blog.comments.dao.CommentMapper;
 import com.mugu.blog.comments.service.MessageService;
 import com.mugu.blog.common.utils.AssertUtils;
 import com.mugu.blog.core.model.ResultCode;
+import com.mugu.blog.core.utils.SnowflakeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -37,6 +38,7 @@ public class MessageServiceImpl implements MessageService {
         BeanUtil.copyProperties(param,comment);
         comment.setCreateTime(new Date());
         comment.setUpdateTime(new Date());
+        comment.setCommentId(String.valueOf(SnowflakeUtil.nextId()));
         comment.setStatus(1);
         mapper.insert(comment);
     }
@@ -53,7 +55,7 @@ public class MessageServiceImpl implements MessageService {
             MessageVo vo = new MessageVo();
             BeanUtil.copyProperties(comment,vo);
             //获取子评论
-            List<MessageVo> cList = comments.stream().filter(p -> Objects.nonNull(p.getPid())&&p.getPid().equals(comment.getId()))
+            List<MessageVo> cList = comments.stream().filter(p -> Objects.nonNull(p.getPid())&&p.getPid().equals(comment.getCommentId()))
                     .map(p -> {
                         MessageVo child = new MessageVo();
                         BeanUtil.copyProperties(p, child);

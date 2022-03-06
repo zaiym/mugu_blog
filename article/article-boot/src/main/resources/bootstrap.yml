@@ -29,6 +29,9 @@ spring:
             refresh: true
           - dataId: share-seata.yaml
             refresh: true
+          ## sentinel的配置
+#          - dataId: share-sentinel.yaml
+#            refresh: true
 server:
   servlet:
     context-path: /${spring.application.name}

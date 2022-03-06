@@ -18,10 +18,10 @@ function listRecommend() {
                 for (var i = 0; i < list.length; i++) {
                     var str = list[i];
                     var html = "<div class=\"m-margin-tb-tiny four wide column\">\n" +
-                        "            <a href='./blog.html?id="+str.id+"' class=\"class_outer\">\n" +
+                        "            <a href='./blog.html?id="+str.articleId+"' class=\"class_outer\">\n" +
                         "                <img src=\"" + str.imgUrl + "\" alt=\"\" class=\"ui rounded image\" style='max-height: 10%'>\n" +
                         "                <span class=\"class_cover\" >\n" +
-                        "                     <h4 class=\"m-font-size-blog-text m-margin-tb-tiny\" href='./blog.html?id="+str.id+"'>" + str.title + "</h4>\n" +
+                        "                     <h4 class=\"m-font-size-blog-text m-margin-tb-tiny\" href='./blog.html?id="+str.articleId+"'>" + str.title + "</h4>\n" +
                         "                  </span>\n" +
                         "            </a>\n" +
                         "        </div>";
@@ -62,7 +62,7 @@ function listArticles(pageNum,pageSize,status) {
                     var str = list[i];
                     var html = "\n" +
                         "                        <div class=\"eleven wide column \">\n" +
-                        "                            <h3 class=\"ui header\" ><a href='./blog.html?id="+str.id+"' class=\"m-black\">"+str.title+"</a></h3>\n" +
+                        "                            <h3 class=\"ui header\" ><a href='./blog.html?id="+str.articleId+"' class=\"m-black\">"+str.title+"</a></h3>\n" +
                         "                            <p class=\"m-text m-margin-top-max\">"+str.describe+"</p>\n" +
                         "                            <div class=\"ui m-margin-top-max grid\">\n" +
                         "                                <div class=\"eleven wide column\">\n" +
@@ -89,7 +89,7 @@ function listArticles(pageNum,pageSize,status) {
                         "                        </div>\n" +
                         "                        <!--博文图片-->\n" +
                         "                        <div class=\"five wide column\">\n" +
-                        "                            <a href='./blog.html?id="+str.id+"'>\n" +
+                        "                            <a href='./blog.html?id="+str.articleId+"'>\n" +
                         "                                <img src=\""+str.imgUrl+"\" alt=\"\" class=\"ui rounded image\" style='max-height:80%'>\n" +
                         "                            </a>\n" +
                         "                        </div><HR style=\"FILTER: alpha(opacity=0,finishopacity=100,style=1)\" width=\"100%\" color=#987cb9 SIZE=3>\n";

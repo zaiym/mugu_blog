@@ -50,7 +50,7 @@ function list(pageNum,pageSize,keyword) {
                         "        <div class=\"ui padded vertical segment m-padded-tb-large\">\n" +
                         "          <div class=\"ui middle aligned mobile reversed stackable grid\" >\n" +
                         "            <div class=\"eleven wide column\">\n" +
-                        "              <h3 class=\"ui header\" ><a href='./blog.html?id="+str.id+"'>"+str.title+"</a></h3>\n" +
+                        "              <h3 class=\"ui header\" ><a href='./blog.html?id="+str.articleId+"'>"+str.title+"</a></h3>\n" +
                         "              <p class=\"m-text m-margin-top-max\">"+str.describe+"</p>\n" +
                         "              <div class=\"ui grid m-margin-top-max\">\n" +
                         "                <div class=\"eleven wide column\">\n" +
@@ -75,7 +75,7 @@ function list(pageNum,pageSize,keyword) {
                         "\n" +
                         "            <!--博文首图-->\n" +
                         "            <div class=\"five wide column\">\n" +
-                        "              <a href='./blog.html?id="+str.id+"'>\n" +
+                        "              <a href='./blog.html?id="+str.articleId+"'>\n" +
                         "                <img src=\""+str.imgUrl+"\" alt=\"\" class=\"ui rounded image\">\n" +
                         "              </a>\n" +
                         "            </div>\n" +

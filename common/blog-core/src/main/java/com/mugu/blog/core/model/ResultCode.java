@@ -23,6 +23,8 @@ public enum ResultCode {
 
     SERVER_FALLBACK(3001,"服务降级了........"),
 
+    SERVER_LIMIT(3002,"网络拥挤，请稍后再试..."),
+
     NO_REPEATABLE_SUBMIT(3002,"请勿重复提交........"),
 
     FILE_MUCH_MAX(4001,"文件过大，请压缩后再上传！");

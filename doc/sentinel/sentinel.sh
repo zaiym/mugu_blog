@@ -1,0 +1,1 @@
+java -Dserver.port=8856 -Dcsp.sentinel.dashboard.server=47.111.0.135:8856 -Dcsp.sentinel.app.type=1 -Dproject.name=sentinel-dashboard -jar sentinel-dashboard-1.7.1.jar

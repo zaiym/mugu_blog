@@ -11,6 +11,7 @@ import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -49,5 +50,11 @@ public class UserController {
     @GetMapping("/getByUserId")
     public ResultMsg<SysUser> getByUserId(String userId){
         return ResultMsg.resultSuccess(sysUserService.getByUserId(userId));
+    }
+
+    @ApiOperation("根据用户ID批量查询")
+    @GetMapping("/listByUserId")
+    public ResultMsg<List<SysUser>> listByUserId(@RequestBody List<String> userIds){
+        return ResultMsg.resultSuccess(sysUserService.listByUserId(userIds));
     }
 }

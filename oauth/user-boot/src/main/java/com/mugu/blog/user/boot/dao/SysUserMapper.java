@@ -16,4 +16,6 @@ public interface SysUserMapper {
     List<SysRole> selectRolesByUserId(Long userId);
 
     SysUser selectByUserId(String userId);
+
+    List<SysUser> listByUserId(List<String> list);
 }

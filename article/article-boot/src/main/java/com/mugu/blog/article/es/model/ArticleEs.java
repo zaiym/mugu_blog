@@ -19,15 +19,18 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ArticleEs implements Serializable {
-
     private static final long serialVersionUID = 1L;
 
     /**
      * id
      */
-    @Id
+
     @ApiModelProperty(value ="id")
     private String id;
+
+    @Id
+    @ApiModelProperty(value = "唯一ID")
+    private String articleId;
 
     /**
      * 作者userid

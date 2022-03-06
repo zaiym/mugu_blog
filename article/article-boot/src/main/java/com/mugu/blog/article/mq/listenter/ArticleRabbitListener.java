@@ -46,9 +46,6 @@ public class ArticleRabbitListener {
         MessageProperties properties = message.getMessageProperties();
         String messageId = properties.getMessageId();
 
-        //保证消息的幂等性，使用setNx，如果插入成功则是第一次消费
-         if(!stringRedisTemplate.opsForValue().setIfAbsent(KeyConstant.ARTICLE_MESSAGE_KEY+messageId, "1",5, TimeUnit.HOURS))
-             return;
         String data = new String(message.getBody());
         log.debug("接收到一条消息，内容为：{}，唯一ID为：{}", data,deliveryTag);
         ArticleMq article = JSON.parseObject(data, ArticleMq.class);
@@ -69,7 +66,7 @@ public class ArticleRabbitListener {
     private void dohandlerMQ(ArticleEs article,Integer flag){
         //删除
         if (Integer.valueOf(3).equals(flag)){
-            articleRepository.deleteById(article.getId());
+            articleRepository.deleteByArticleId(article.getArticleId());
         }else{
             //新增、更新
             articleRepository.save(article);

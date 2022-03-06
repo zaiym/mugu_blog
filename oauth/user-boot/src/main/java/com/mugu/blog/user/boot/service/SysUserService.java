@@ -12,4 +12,6 @@ public interface SysUserService {
 
     SysUser getByUserId(String userId);
 
+    List<SysUser> listByUserId(List<String> userIds);
+
 }

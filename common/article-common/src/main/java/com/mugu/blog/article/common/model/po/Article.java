@@ -17,6 +17,9 @@ public class Article implements Serializable {
     @ApiModelProperty(value ="id")
     private Long id;
 
+    @ApiModelProperty(value = "唯一ID")
+    private String articleId;
+
     /**
      * 作者userid
      */
@@ -34,6 +37,9 @@ public class Article implements Serializable {
      */
     @ApiModelProperty(value ="标题")
     private String title;
+
+    @ApiModelProperty(value = "分类名称")
+    private String typeName;
 
     /**
      * 内容

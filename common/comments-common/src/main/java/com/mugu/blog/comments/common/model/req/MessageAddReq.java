@@ -11,7 +11,7 @@ import javax.validation.constraints.NotNull;
 public class MessageAddReq {
 
     @ApiModelProperty(value = "父留言ID，顶层留言不填")
-    private Long pid;
+    private String pid;
 
     @ApiModelProperty(value = "姓名",required = true)
     @NotBlank(message = "姓名不能为空")

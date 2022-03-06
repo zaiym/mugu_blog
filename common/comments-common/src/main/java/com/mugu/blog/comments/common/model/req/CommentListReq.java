@@ -6,5 +6,5 @@ import lombok.Data;
 @Data
 public class CommentListReq {
     @ApiModelProperty(value = "文章ID，获取全部评论总数可不填")
-    private Long articleId;
+    private String articleId;
 }

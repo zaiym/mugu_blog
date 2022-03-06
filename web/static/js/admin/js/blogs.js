@@ -91,8 +91,8 @@ function listArticles(pageNum,pageSize){
                         "            <td>"+str.updateTime+"</td>\n" +
                         "            <td>\n" +
                         "              <!--th:href=\"@{/admin/types/{id}/input(id=${type.id})}\"-->\n" +
-                        "              <a href='./blogs-input.html?id="+str.id+"' class=\"ui mini teal basic button\">编辑</a>\n" +
-                        "              <a href=\"#\" onclick=delById("+str.id+") class=\"ui mini red basic button\">删除</a>\n" +
+                        "              <a href='./blogs-input.html?id="+'"'+str.articleId+'"'+"' class=\"ui mini teal basic button\">编辑</a>\n" +
+                        "              <a href=\"#\" onclick=delById("+'"'+str.articleId+'"'+") class=\"ui mini red basic button\">删除</a>\n" +
                         "            </td>\n" +
                         "          </tr>";
                     $("#article").append(html);

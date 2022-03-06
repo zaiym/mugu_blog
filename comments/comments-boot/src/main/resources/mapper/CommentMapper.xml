@@ -13,6 +13,7 @@
         <result column="create_time" property="createTime" />
         <result column="update_time" property="updateTime" />
         <result column="status" property="status" />
+        <result column="comment_id" property="commentId" />
     </resultMap>
 
     <sql id="Base_Column_List">
@@ -25,7 +26,8 @@
                 create_time,
                 update_time,
                 status,
-                reply_name
+                reply_name,
+                comment_id
     </sql>
 
     <insert id="insert" useGeneratedKeys="true" keyColumn="id" keyProperty="id" parameterType="com.mugu.blog.comments.common.model.po.Comment">
@@ -36,6 +38,9 @@
             </if>
             <if test="null != pid">
                 pid,
+            </if>
+            <if test="null != commentId and '' != commentId">
+                comment_id,
             </if>
             <if test="null != nickName and '' != nickName">
                 nick_name,
@@ -67,6 +72,9 @@
             </if>
             <if test="null != pid">
                 #{pid},
+            </if>
+            <if test="null != commentId and '' != commentId">
+                #{commentId},
             </if>
             <if test="null != nickName and '' != nickName">
                 #{nickName},
@@ -118,7 +126,7 @@
     <select id="load" resultMap="BaseResultMap">
         SELECT <include refid="Base_Column_List" />
         FROM comment
-        WHERE id = #{id} and status=1
+        WHERE comment_id = #{commentId} and status=1
     </select>
 
     <select id="pageList" resultMap="BaseResultMap">

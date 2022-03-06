@@ -16,6 +16,9 @@ public class MessageVo {
     @ApiModelProperty(value = "内容")
     private String content;
 
+    @ApiModelProperty(value = "评论ID")
+    private String commentId;
+
     @ApiModelProperty(value = "父评论id，如果为顶级则为null")
     private Long pid;
 

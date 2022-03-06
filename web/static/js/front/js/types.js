@@ -57,7 +57,7 @@ function listArticles(params) {
                     var html="<div class=\"ui padded vertical segment m-padded-tb-large\">\n" +
                         "        <div class=\"ui middle aligned mobile reversed stackable grid\" >\n" +
                         "          <div class=\"eleven wide column\">\n" +
-                        "            <h3 class=\"ui header\" ><a href='./blog.html?id="+str.id+"'>"+str.title+"</a></h3>\n" +
+                        "            <h3 class=\"ui header\" ><a href='./blog.html?id="+str.articleId+"'>"+str.title+"</a></h3>\n" +
                         "            <p class=\"m-text\">"+str.describe+"</p>\n" +
                         "            <div class=\"ui grid\">\n" +
                         "              <div class=\"eleven wide column\">\n" +

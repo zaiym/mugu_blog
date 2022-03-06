@@ -8,6 +8,7 @@ import com.mugu.blog.comments.common.model.req.MessageAddReq;
 import com.mugu.blog.comments.common.model.req.MessageListReq;
 import com.mugu.blog.comments.common.model.vo.CommentVo;
 import com.mugu.blog.comments.common.model.vo.MessageVo;
+import com.mugu.blog.comments.common.model.vo.TotalVo;
 import com.mugu.blog.core.model.ResultCode;
 import com.mugu.blog.core.model.ResultMsg;
 import lombok.extern.slf4j.Slf4j;
@@ -33,6 +34,12 @@ public class CommentFeignFallback implements CommentFeign, MessageFeign {
 
     @Override
     public ResultMsg<Long> total(CommentListReq param) {
+        log.error("Comment Server Fallback..........");
+        return ResultMsg.resultFail(ResultCode.SERVER_FALLBACK.getCode(),ResultCode.SERVER_FALLBACK.getMsg());
+    }
+
+    @Override
+    public ResultMsg<List<TotalVo>> listTotal(List<CommentListReq> param) {
         log.error("Comment Server Fallback..........");
         return ResultMsg.resultFail(ResultCode.SERVER_FALLBACK.getCode(),ResultCode.SERVER_FALLBACK.getMsg());
     }

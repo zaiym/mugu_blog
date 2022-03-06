@@ -36,10 +36,9 @@ public interface ArticleMapper {
 
     /**
     * 查询 根据主键 id 查询
-    * @author zhengkai.blog.csdn.net
     * @date 2022/01/15
     **/
-    Article load(Long id);
+    Article load(String id);
 
     /**
     * 查询 分页查询

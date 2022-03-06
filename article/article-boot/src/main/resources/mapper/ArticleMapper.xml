@@ -20,6 +20,8 @@
         <result column="create_time" property="createTime" />
         <result column="update_time" property="updateTime" />
         <result column="describe" property="describe" />
+        <result column="article_id" property="articleId" />
+
     </resultMap>
 
     <sql id="Base_Column_List">
@@ -38,7 +40,8 @@
                 is_comment,
                 status,
                 create_time,
-                update_time
+                update_time,
+                article_id
     </sql>
 
     <insert id="insert" useGeneratedKeys="true" keyColumn="id" keyProperty="id" parameterType="com.mugu.blog.article.common.model.po.Article">
@@ -47,6 +50,11 @@
             <if test="null != authorId">
                 author_id,
             </if>
+
+            <if test="null != articleId and '' != articleId">
+                article_id,
+            </if>
+
             <if test="null != typeId ">
                 type_id,
             </if>
@@ -97,6 +105,11 @@
             <if test="null != authorId">
                 #{authorId},
             </if>
+
+            <if test="null != articleId and '' != articleId">
+                #{articleId},
+            </if>
+
             <if test="null != typeId">
                 #{typeId},
             </if>
@@ -155,7 +168,7 @@
     </delete>
     
     <delete id="delById">
-        update article set status=0 where id in
+        update article set status=0 where article_id in
         <foreach collection="list" item="item" open="(" separator="," close=")">
             #{item.id}
         </foreach>
@@ -184,12 +197,31 @@
     <select id="load" resultMap="BaseResultMap">
         SELECT <include refid="Base_Column_List" />
         FROM article
-        WHERE id = #{id}
+        WHERE article_id = #{id}
     </select>
 
     <select id="pageList" resultMap="BaseResultMap">
-        SELECT <include refid="Base_Column_List" />
-        FROM article
+        SELECT
+        id,
+        author_id,
+        type_id,
+        title,
+        content,
+        source,
+        view_num,
+        img_url,
+        `describe`,
+        is_recommend,
+        is_explain,
+        is_appreciate,
+        is_comment,
+        STATUS,
+        create_time,
+        update_time,
+        article_id,
+        (select name from type t where t.id=a.type_id) as typeName
+        FROM
+        article a
         <where>
             <if test="title!=null and title!=''">
                 and title like CONCAT('%',#{title},'%')

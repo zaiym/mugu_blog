@@ -42,4 +42,23 @@ WHERE
 	user_id = #{userId}
 	AND STATUS =1
 	</select>
+    <select id="listByUserId" resultType="com.mugu.blog.user.common.po.SysUser">
+			SELECT
+		user_id,
+		username,
+		nickname,
+		avatar,
+		gender,
+		avatar,
+		mobile,
+		email
+	FROM
+		sys_user
+	WHERE
+		STATUS =1
+		and user_id in
+		<foreach collection="list" item="item" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</select>
 </mapper>

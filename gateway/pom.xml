@@ -74,6 +74,24 @@
             <artifactId>blog-monitor-client-starter</artifactId>
         </dependency>
 
+        <!--sentinel依赖-->
+        <dependency>
+            <groupId>com.mugu.blog</groupId>
+            <artifactId>blog-sentinel-starter</artifactId>
+        </dependency>
+
+        <!-- spring cloud gateway整合sentinel的依赖-->
+        <dependency>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-alibaba-sentinel-gateway</artifactId>
+        </dependency>
+
+        <!--sentinel持久化+nacos-->
+        <dependency>
+            <groupId>com.alibaba.csp</groupId>
+            <artifactId>sentinel-datasource-nacos</artifactId>
+        </dependency>
+
     </dependencies>
 
     <build>
