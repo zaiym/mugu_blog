@@ -17,7 +17,7 @@ public class AsyncAutoConfig {
     //配置线程池
     @Bean
     @Primary
-    public AsyncTaskExecutor taskExecutor() {
+    public AsyncTaskExecutor asyncTaskExecutor() {
         ThreadPoolTaskExecutor poolTaskExecutor = new ThreadPoolTaskExecutor();
         poolTaskExecutor.setCorePoolSize(4);
         poolTaskExecutor.setMaxPoolSize(6);

@@ -57,6 +57,8 @@ import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilde
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.context.request.RequestAttributes;
+import org.springframework.web.context.request.RequestContextHolder;
 
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
@@ -90,7 +92,7 @@ public class ArticleServiceImpl implements ArticleService {
     private ElasticsearchRestTemplate elasticsearchTemplate;
 
     @Autowired
-    private AsyncTaskExecutor executor;
+    private AsyncTaskExecutor asyncTaskExecutor;
 
     @Transactional
     @Override
@@ -134,9 +136,13 @@ public class ArticleServiceImpl implements ArticleService {
          * 将条件以List方式传入，一次调用获取集合，然后聚合
          */
         List<Article> articles = articlePage.getResult();
+        //获取主线程的请求信息
+        RequestAttributes attributes = RequestContextHolder.getRequestAttributes();
 
         //1. 异步获取文章作者的信息
         CompletableFuture<List<SysUser>> futureSysUsers = CompletableFuture.supplyAsync(() -> {
+            //将主线程的请求信息设置到异步线程中，否则会丢失请求上下文，导致调用失败
+            RequestContextHolder.setRequestAttributes(attributes);
             //获取所有的作者ID
             List<String> authorIds = articles.stream().map(Article::getAuthorId).collect(Collectors.toList());
             List<SysUser> sysUsers = new ArrayList<>();
@@ -146,10 +152,12 @@ public class ArticleServiceImpl implements ArticleService {
                 sysUsers = authorRes.getData();
             }
             return sysUsers;
-        }, executor);
+        }, asyncTaskExecutor);
 
         //2. 异步获取文章的评论总数
         CompletableFuture<List<TotalVo>> futureCommentTotal = CompletableFuture.supplyAsync(() -> {
+            //将主线程的请求信息设置到异步线程中，否则会丢失请求上下文，导致调用失败
+            RequestContextHolder.setRequestAttributes(attributes);
             List<TotalVo> commentVos = new ArrayList<>();
             //获取所有的文章ID
             List<CommentListReq> params = articles.stream().map(p -> {
@@ -163,7 +171,7 @@ public class ArticleServiceImpl implements ArticleService {
                 commentVos = commentRes.getData();
             }
             return commentVos;
-        }, executor);
+        }, asyncTaskExecutor);
 
         CompletableFuture.allOf(futureSysUsers,futureCommentTotal).join();
 
