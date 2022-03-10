@@ -2,6 +2,7 @@ package com.mugu.blog.async;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.core.task.AsyncTaskExecutor;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -15,6 +16,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 public class AsyncAutoConfig {
     //配置线程池
     @Bean
+    @Primary
     public AsyncTaskExecutor taskExecutor() {
         ThreadPoolTaskExecutor poolTaskExecutor = new ThreadPoolTaskExecutor();
         poolTaskExecutor.setCorePoolSize(4);

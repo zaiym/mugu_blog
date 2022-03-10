@@ -24,19 +24,19 @@ import com.mugu.blog.comments.api.feign.CommentFeign;
 import com.mugu.blog.comments.common.model.req.CommentListReq;
 import com.mugu.blog.comments.common.model.vo.TotalVo;
 import com.mugu.blog.common.utils.AssertUtils;
-import com.mugu.blog.core.utils.OauthUtils;
-import com.mugu.blog.core.utils.RequestContextUtils;
 import com.mugu.blog.core.constant.KeyConstant;
 import com.mugu.blog.core.model.BaseParam;
 import com.mugu.blog.core.model.PageData;
 import com.mugu.blog.core.model.ResultCode;
 import com.mugu.blog.core.model.ResultMsg;
 import com.mugu.blog.core.utils.IpUtils;
+import com.mugu.blog.core.utils.OauthUtils;
+import com.mugu.blog.core.utils.RequestContextUtils;
 import com.mugu.blog.core.utils.SnowflakeUtil;
 import com.mugu.blog.mybatis.config.utils.PageUtils;
 import com.mugu.blog.user.api.feign.UserFeign;
 import com.mugu.blog.user.common.po.SysUser;
-import org.apache.commons.lang3.StringUtils;
+import lombok.SneakyThrows;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
@@ -45,7 +45,7 @@ import org.elasticsearch.search.fetch.subphase.highlight.HighlightBuilder;
 import org.elasticsearch.search.fetch.subphase.highlight.HighlightField;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
+import org.springframework.core.task.AsyncTaskExecutor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.elasticsearch.core.ElasticsearchRestTemplate;
@@ -59,6 +59,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 @Service
@@ -88,6 +89,9 @@ public class ArticleServiceImpl implements ArticleService {
     @Autowired
     private ElasticsearchRestTemplate elasticsearchTemplate;
 
+    @Autowired
+    private AsyncTaskExecutor executor;
+
     @Transactional
     @Override
     public void add(ArticleAddReq req) {
@@ -113,6 +117,7 @@ public class ArticleServiceImpl implements ArticleService {
         }
     }
 
+    @SneakyThrows
     @Override
     public PageData<ArticleVo> list(ArticleListReq req) {
         //分页获取所有的内容
@@ -125,43 +130,55 @@ public class ArticleServiceImpl implements ArticleService {
         data.setTotal(articlePage.getTotal());
         /**
          * TODO 优化点一：此处需要优化，不能循环调用服务
+         * TODO 优化点二：此处采用的异步并行调用服务，因为调用之间并无任何依赖
          * 将条件以List方式传入，一次调用获取集合，然后聚合
          */
         List<Article> articles = articlePage.getResult();
-        //获取所有的作者ID
-        List<String> authorIds = articles.stream().map(Article::getAuthorId).collect(Collectors.toList());
-        //获取所有的文章ID
-        List<CommentListReq> params = articles.stream().map(p->{
-            CommentListReq param = new CommentListReq();
-            param.setArticleId(p.getArticleId());
-            return param;
-        }).collect(Collectors.toList());
-        List<SysUser> sysUsers=new ArrayList<>();
-        List<TotalVo> commentVos=new ArrayList<>();
-        //调用user服务获取作者信息
-        ResultMsg<List<SysUser>> authorRes = userFeign.listByUserId(authorIds);
-        if (ResultMsg.isSuccess(authorRes)&&authorRes.getData()!=null){
-            sysUsers=authorRes.getData();
-        }
 
-        //调用评论信息获取评论总数
-        ResultMsg<List<TotalVo>> commentRes = commentFeign.listTotal(params);
-        if (ResultMsg.isSuccess(commentRes)&&commentRes.getData()!=null){
-            commentVos=commentRes.getData();
-        }
+        //1. 异步获取文章作者的信息
+        CompletableFuture<List<SysUser>> futureSysUsers = CompletableFuture.supplyAsync(() -> {
+            //获取所有的作者ID
+            List<String> authorIds = articles.stream().map(Article::getAuthorId).collect(Collectors.toList());
+            List<SysUser> sysUsers = new ArrayList<>();
+            //调用user服务获取作者信息
+            ResultMsg<List<SysUser>> authorRes = userFeign.listByUserId(authorIds);
+            if (ResultMsg.isSuccess(authorRes) && authorRes.getData() != null) {
+                sysUsers = authorRes.getData();
+            }
+            return sysUsers;
+        }, executor);
+
+        //2. 异步获取文章的评论总数
+        CompletableFuture<List<TotalVo>> futureCommentTotal = CompletableFuture.supplyAsync(() -> {
+            List<TotalVo> commentVos = new ArrayList<>();
+            //获取所有的文章ID
+            List<CommentListReq> params = articles.stream().map(p -> {
+                CommentListReq param = new CommentListReq();
+                param.setArticleId(p.getArticleId());
+                return param;
+            }).collect(Collectors.toList());
+            //调用评论信息获取评论总数
+            ResultMsg<List<TotalVo>> commentRes = commentFeign.listTotal(params);
+            if (ResultMsg.isSuccess(commentRes) && commentRes.getData() != null) {
+                commentVos = commentRes.getData();
+            }
+            return commentVos;
+        }, executor);
+
+        CompletableFuture.allOf(futureSysUsers,futureCommentTotal).join();
 
         for (Article article : articlePage.getResult()) {
             ArticleVo vo = new ArticleVo();
             BeanUtil.copyProperties(article, vo);
 
             //作者相关信息
-            sysUsers.stream().filter(p-> StrUtil.equals(article.getAuthorId(),p.getUserId())).limit(1).peek(p->{
+            futureSysUsers.get().stream().filter(p-> StrUtil.equals(article.getAuthorId(),p.getUserId())).limit(1).peek(p->{
                 vo.setAuthorName(p.getNickname());
                 vo.setAuthorAvatar(p.getAvatar());
             }).collect(Collectors.toList());
 
             //评论
-            commentVos.stream().filter(p-> StrUtil.equals(article.getArticleId(),p.getArticleId())).limit(1).peek(p-> vo.setCommentNum(p.getTotal())).collect(Collectors.toList());
+            futureCommentTotal.get().stream().filter(p-> StrUtil.equals(article.getArticleId(),p.getArticleId())).limit(1).peek(p-> vo.setCommentNum(p.getTotal())).collect(Collectors.toList());
 
             vo.setViewNum(stringRedisTemplate.opsForHyperLogLog().size(KeyConstant.ARTICLE_V+article.getArticleId()));
 

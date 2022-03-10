@@ -99,6 +99,11 @@
             <groupId>com.mugu.blog</groupId>
             <artifactId>blog-monitor-client-starter</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>com.mugu.blog</groupId>
+            <artifactId>blog-async-starter</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
