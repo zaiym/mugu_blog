@@ -1,4 +1,5 @@
 package com.mugu.blog.oauth.server.config;
+
 import com.mugu.blog.core.model.oauth.OAuthConstant;
 import com.mugu.blog.oauth.server.model.SecurityUser;
 import com.mugu.blog.oauth.server.model.TokenConstant;
@@ -8,7 +9,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.oauth2.common.DefaultOAuth2AccessToken;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
-import org.springframework.security.oauth2.provider.endpoint.TokenEndpoint;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
@@ -44,6 +44,8 @@ public class AccessTokenConfig {
         JwtAccessTokenConverter converter = new JwtAccessTokenEnhancer();
         // 设置秘钥
         converter.setSigningKey(tokenConstant.getSignKey());
+        //设置令牌转换器，将用户信息存储到令牌中
+        converter.setAccessTokenConverter(new JwtEnhanceAccessTokenConverter());
         return converter;
     }
 
@@ -57,19 +59,22 @@ public class AccessTokenConfig {
          */
         @Override
         public OAuth2AccessToken enhance(OAuth2AccessToken accessToken, OAuth2Authentication authentication) {
-            //获取userDetailService中查询到用户信息
-            SecurityUser user=(SecurityUser)authentication.getUserAuthentication().getPrincipal();
-            //将额外的信息放入到LinkedHashMap中
-            LinkedHashMap<String,Object> extendInformation=new LinkedHashMap<>();
-            //设置用户的userId
-            extendInformation.put(OAuthConstant.USER_ID,user.getUserId());
-            extendInformation.put(OAuthConstant.GENDER,user.getGender());
-            extendInformation.put(OAuthConstant.NICK_NAME,user.getNickname());
-            extendInformation.put(OAuthConstant.AVATAR,user.getAvatar());
-            extendInformation.put(OAuthConstant.MOBILE,user.getEmail());
-            extendInformation.put(OAuthConstant.EMAIL,user.getUserId());
-            //添加到additionalInformation
-            ((DefaultOAuth2AccessToken) accessToken).setAdditionalInformation(extendInformation);
+            Object principal=authentication.getUserAuthentication().getPrincipal();
+            if (principal instanceof SecurityUser){
+                //获取userDetailService中查询到用户信息
+                SecurityUser user=(SecurityUser)authentication.getUserAuthentication().getPrincipal();
+                //将额外的信息放入到LinkedHashMap中
+                LinkedHashMap<String,Object> extendInformation=new LinkedHashMap<>();
+                //设置用户的userId
+                extendInformation.put(OAuthConstant.USER_ID,user.getUserId());
+                extendInformation.put(OAuthConstant.GENDER,user.getGender());
+                extendInformation.put(OAuthConstant.NICK_NAME,user.getNickname());
+                extendInformation.put(OAuthConstant.AVATAR,user.getAvatar());
+                extendInformation.put(OAuthConstant.MOBILE,user.getEmail());
+                extendInformation.put(OAuthConstant.EMAIL,user.getUserId());
+                //添加到additionalInformation
+                ((DefaultOAuth2AccessToken) accessToken).setAdditionalInformation(extendInformation);
+            }
             return super.enhance(accessToken, authentication);
         }
     }
