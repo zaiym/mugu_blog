@@ -99,8 +99,6 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     @Bean
     public AuthorizationCodeServices authorizationCodeServices() {
         return new JdbcAuthorizationCodeServices(dataSource);
-        //todo 授权码暂时存在内存中，后续可以存储在数据库中
-//        return new InMemoryAuthorizationCodeServices();
     }
 
     /**

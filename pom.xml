@@ -209,6 +209,12 @@
             </dependency>
 
             <dependency>
+                <groupId>org.apache.skywalking</groupId>
+                <artifactId>apm-toolkit-trace</artifactId>
+                <version>${skywaling.logback.version}</version>
+            </dependency>
+
+            <dependency>
                 <groupId>com.mugu.blog</groupId>
                 <artifactId>blog-mybatis-starter</artifactId>
                 <version>${blog.version}</version>

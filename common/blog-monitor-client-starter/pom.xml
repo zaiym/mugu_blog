@@ -13,18 +13,15 @@
     <description>spring boot admin 客户端监控starter</description>
 
     <dependencies>
+        <!--actuator的依赖-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
-
-
+        <!--admin客户端的依赖-->
         <dependency>
             <groupId>de.codecentric</groupId>
             <artifactId>spring-boot-admin-starter-client</artifactId>
         </dependency>
-
     </dependencies>
-
-
 </project>

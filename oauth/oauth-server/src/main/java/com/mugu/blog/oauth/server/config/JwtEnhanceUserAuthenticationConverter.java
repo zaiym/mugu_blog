@@ -34,6 +34,7 @@ public class JwtEnhanceUserAuthenticationConverter extends DefaultUserAuthentica
             String mobile=map.get(OAuthConstant.MOBILE).toString();
             String email=map.get(OAuthConstant.EMAIL).toString();
             SecurityUser user = SecurityUser.builder()
+                    .username(username)
                     .userId(userId)
                     .gender(gender)
                     .nickname(nickName)

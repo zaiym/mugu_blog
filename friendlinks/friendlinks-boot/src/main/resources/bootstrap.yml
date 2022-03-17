@@ -27,7 +27,11 @@ spring:
             ## 分页插件的配置
           - dataId: share.pagehelper.yaml
             refresh: true
+            ## seata的配置
           - dataId: share-seata.yaml
+            refresh: true
+          ## openfeign的配置
+          - dataId: share-feign.yaml
             refresh: true
 server:
   servlet:

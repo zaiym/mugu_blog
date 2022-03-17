@@ -12,9 +12,17 @@
     <artifactId>blog-skywalking-starter</artifactId>
 
     <dependencies>
+        <!--logback日志传输依赖-->
         <dependency>
             <groupId>org.apache.skywalking</groupId>
             <artifactId>apm-toolkit-logback-1.x</artifactId>
         </dependency>
+
+        <!--异步链路追踪依赖-->
+        <dependency>
+            <groupId>org.apache.skywalking</groupId>
+            <artifactId>apm-toolkit-trace</artifactId>
+        </dependency>
+
     </dependencies>
 </project>

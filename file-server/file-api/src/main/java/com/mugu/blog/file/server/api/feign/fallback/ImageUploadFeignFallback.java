@@ -4,8 +4,10 @@ import com.mugu.blog.core.model.ResultCode;
 import com.mugu.blog.core.model.ResultMsg;
 import com.mugu.blog.file.server.api.feign.ImageUploadFeign;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
+@Component
 @Slf4j
 public class ImageUploadFeignFallback implements ImageUploadFeign {
     @Override

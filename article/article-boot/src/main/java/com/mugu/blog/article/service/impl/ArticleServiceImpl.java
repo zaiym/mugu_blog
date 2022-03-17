@@ -37,6 +37,9 @@ import com.mugu.blog.mybatis.config.utils.PageUtils;
 import com.mugu.blog.user.api.feign.UserFeign;
 import com.mugu.blog.user.common.po.SysUser;
 import lombok.SneakyThrows;
+import org.apache.skywalking.apm.toolkit.trace.RunnableWrapper;
+import org.apache.skywalking.apm.toolkit.trace.SupplierWrapper;
+import org.apache.skywalking.apm.toolkit.trace.TraceCrossThread;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
@@ -63,7 +66,6 @@ import org.springframework.web.context.request.RequestContextHolder;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
-
 @Service
 public class ArticleServiceImpl implements ArticleService {
 
@@ -140,7 +142,7 @@ public class ArticleServiceImpl implements ArticleService {
         RequestAttributes attributes = RequestContextHolder.getRequestAttributes();
 
         //1. 异步获取文章作者的信息
-        CompletableFuture<List<SysUser>> futureSysUsers = CompletableFuture.supplyAsync(() -> {
+        CompletableFuture<List<SysUser>> futureSysUsers = CompletableFuture.supplyAsync(SupplierWrapper.of(() -> {
             //将主线程的请求信息设置到异步线程中，否则会丢失请求上下文，导致调用失败
             RequestContextHolder.setRequestAttributes(attributes);
             //获取所有的作者ID
@@ -152,10 +154,10 @@ public class ArticleServiceImpl implements ArticleService {
                 sysUsers = authorRes.getData();
             }
             return sysUsers;
-        }, asyncTaskExecutor);
+        }), asyncTaskExecutor);
 
         //2. 异步获取文章的评论总数
-        CompletableFuture<List<TotalVo>> futureCommentTotal = CompletableFuture.supplyAsync(() -> {
+        CompletableFuture<List<TotalVo>> futureCommentTotal = CompletableFuture.supplyAsync(SupplierWrapper.of(() -> {
             //将主线程的请求信息设置到异步线程中，否则会丢失请求上下文，导致调用失败
             RequestContextHolder.setRequestAttributes(attributes);
             List<TotalVo> commentVos = new ArrayList<>();
@@ -171,7 +173,7 @@ public class ArticleServiceImpl implements ArticleService {
                 commentVos = commentRes.getData();
             }
             return commentVos;
-        }, asyncTaskExecutor);
+        }), asyncTaskExecutor);
 
         CompletableFuture.allOf(futureSysUsers,futureCommentTotal).join();
 

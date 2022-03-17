@@ -55,7 +55,7 @@ public class AvoidRepeatableCommitAspect {
 
         String key = String.format("%s:%s_%d", KeyConstant.AVOID_REPEATABLE_COMMIT, ip, hashCode);
 
-        log.info("ipKey={},hashCode={},key={}", ipKey, hashCode, key);
+        log.debug("ipKey={},hashCode={},key={}", ipKey, hashCode, key);
 
         AvoidRepeatableCommit avoidRepeatableCommit = method.getAnnotation(AvoidRepeatableCommit.class);
 

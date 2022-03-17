@@ -1,6 +1,7 @@
 package com.mugu.blog.picture.service;
 
 import com.mugu.blog.core.model.PageData;
+import com.mugu.blog.picture.common.model.po.Picture;
 import com.mugu.blog.picture.common.model.req.PictureAddReq;
 import com.mugu.blog.picture.common.model.req.PictureDelReq;
 import com.mugu.blog.picture.common.model.req.PictureListReq;
@@ -11,6 +12,8 @@ import java.util.List;
 
 public interface PictureService {
     void add(PictureAddReq param, MultipartFile file);
+
+    int add(Picture picture);
 
     PageData<List<PictureVo>> list(PictureListReq param);
 

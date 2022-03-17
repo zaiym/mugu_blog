@@ -24,6 +24,9 @@ spring:
             ## actuator端点的配置
           - dataId: share-actuator.yaml
             refresh: true
+          ## openfeign的配置
+          - dataId: share-feign.yaml
+            refresh: true
 server:
   servlet:
     context-path: /${spring.application.name}

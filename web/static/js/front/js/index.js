@@ -1,5 +1,5 @@
 // $('#newblog-container').load(/*[[@{/footer/newblog}]]*/"/footer/newblog");
-sessionStorage.setItem("requestUrl","http://127.0.0.1:9000");
+sessionStorage.setItem("requestUrl","http://127.0.0.1/api");
 //获取推荐的文章
 function listRecommend() {
     $.ajax({

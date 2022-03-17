@@ -18,14 +18,14 @@ $('.ui.form').form({
 });
 
 //请求的url
-sessionStorage.setItem("requestUrl","http://127.0.0.1:9000");
+sessionStorage.setItem("requestUrl","http://127.0.0.1/api");
 
 $('#login').click(function () {
     var username=$("#username").val();
     var password=$("#password").val();
     $.ajax({
         type : "POST",
-        data:{ username: username, password: password,client_id:"myjszl",client_secret:"123",grant_type:"password" },
+        data:{ username: username, password: password,client_id:"mugu",client_secret:"123",grant_type:"password" },
         url : sessionStorage.getItem("requestUrl")+"/blog-auth-server/oauth/token",
         async: false,
         success : function (data) {

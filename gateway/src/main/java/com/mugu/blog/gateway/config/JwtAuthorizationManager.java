@@ -27,7 +27,7 @@ import java.util.Map;
  */
 @Slf4j
 @Component
-public class JwtAccessManager implements ReactiveAuthorizationManager<AuthorizationContext> {
+public class JwtAuthorizationManager implements ReactiveAuthorizationManager<AuthorizationContext> {
 
     @Autowired
     private RedisTemplate redisTemplate;
@@ -53,7 +53,7 @@ public class JwtAccessManager implements ReactiveAuthorizationManager<Authorizat
             if (antPathMatcher.match(path, restFulPath)) {
                 authorities.addAll(roles);
             }
-        });
+        }); 
         //认证通过且角色匹配的用户可访问当前路径
         return mono
                 //判断是否认证成功

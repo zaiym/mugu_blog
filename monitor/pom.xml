@@ -20,16 +20,17 @@
         </dependency>
 
         <dependency>
-            <groupId>de.codecentric</groupId>
-            <artifactId>spring-boot-admin-starter-server</artifactId>
-        </dependency>
-
-        <dependency>
             <groupId>com.mugu.blog</groupId>
             <artifactId>blog-nacos-starter</artifactId>
         </dependency>
 
-        <!--监控-->
+        <!--spring boot admin的服务端-->
+        <dependency>
+            <groupId>de.codecentric</groupId>
+            <artifactId>spring-boot-admin-starter-server</artifactId>
+        </dependency>
+
+        <!--actuator的依赖-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>

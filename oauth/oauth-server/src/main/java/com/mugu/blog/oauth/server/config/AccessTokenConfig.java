@@ -3,12 +3,16 @@ package com.mugu.blog.oauth.server.config;
 import com.mugu.blog.core.model.oauth.OAuthConstant;
 import com.mugu.blog.oauth.server.model.SecurityUser;
 import com.mugu.blog.oauth.server.model.TokenConstant;
+import com.mugu.blog.oauth.server.service.impl.JwtTokenUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.oauth2.common.DefaultOAuth2AccessToken;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
+import org.springframework.security.oauth2.provider.token.AccessTokenConverter;
+import org.springframework.security.oauth2.provider.token.DefaultAccessTokenConverter;
+import org.springframework.security.oauth2.provider.token.DefaultUserAuthenticationConverter;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
@@ -24,6 +28,9 @@ public class AccessTokenConfig {
 
     @Autowired
     private TokenConstant tokenConstant;
+
+    @Autowired
+    private JwtTokenUserDetailsService jwtTokenUserDetailsService;
 
     /**
      * 令牌的存储策略
@@ -44,8 +51,21 @@ public class AccessTokenConfig {
         JwtAccessTokenConverter converter = new JwtAccessTokenEnhancer();
         // 设置秘钥
         converter.setSigningKey(tokenConstant.getSignKey());
+
+        /**
+         * 解决刷新令牌，无法增强的方案一：设置自定义的UserDetailService
+
+            //创建默认的DefaultUserAuthenticationConverter
+            DefaultUserAuthenticationConverter userAuthenticationConverter = new DefaultUserAuthenticationConverter();
+            //注入UserDetailService
+            userAuthenticationConverter.setUserDetailsService(jwtTokenUserDetailsService);
+            DefaultAccessTokenConverter tokenConverter = new DefaultAccessTokenConverter();
+            tokenConverter.setUserTokenConverter(userAuthenticationConverter);
+         */
         //设置令牌转换器，将用户信息存储到令牌中
-        converter.setAccessTokenConverter(new JwtEnhanceAccessTokenConverter());
+        DefaultAccessTokenConverter accessTokenConverter = new DefaultAccessTokenConverter();
+        accessTokenConverter.setUserTokenConverter(new JwtEnhanceUserAuthenticationConverter());
+        converter.setAccessTokenConverter(accessTokenConverter);
         return converter;
     }
 

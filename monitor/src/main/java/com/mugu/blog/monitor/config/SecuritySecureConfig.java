@@ -23,6 +23,7 @@ public class SecuritySecureConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         // 登录成功处理类
         SavedRequestAwareAuthenticationSuccessHandler successHandler = new SavedRequestAwareAuthenticationSuccessHandler();
+        //重定向到首页
         successHandler.setTargetUrlParameter("redirectTo");
         successHandler.setDefaultTargetUrl(adminContextPath + "/");
 
@@ -47,6 +48,4 @@ public class SecuritySecureConfig extends WebSecurityConfigurerAdapter {
                 );
 
     }
-
-
 }

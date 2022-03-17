@@ -18,7 +18,9 @@ import io.seata.spring.annotation.GlobalTransactional;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Date;
@@ -34,6 +36,10 @@ public class PictureServiceImpl implements PictureService {
     @Autowired
     private ImageUploadFeign imageUploadFeign;
 
+    @Autowired
+    private ApplicationContext applicationContext;
+
+
     @GlobalTransactional(name = "addPicture")
     @SneakyThrows
     @Override
@@ -42,7 +48,6 @@ public class PictureServiceImpl implements PictureService {
         //上传图片
         ResultMsg<String> imageRes = imageUploadFeign.upload(file);
         AssertUtils.assertTrue(ResultMsg.isSuccess(imageRes), imageRes.getCode(),imageRes.getMsg());
-
         Picture picture = new Picture();
         BeanUtil.copyProperties(param, picture);
         //图片的url
@@ -51,7 +56,15 @@ public class PictureServiceImpl implements PictureService {
         picture.setUpdateTime(new Date());
         picture.setStatus(1);
         picture.setUserId(OauthUtils.getCurrentUser().getUserId());
-        pictureMapper.insert(picture);
+        PictureService service = applicationContext.getBean(PictureService.class);
+        int i = service.add(picture);
+        AssertUtils.assertTrue(i>0);
+    }
+
+    @Transactional
+    @Override
+    public int add(Picture picture) {
+        return pictureMapper.insert(picture);
     }
 
     @Override
@@ -59,6 +72,7 @@ public class PictureServiceImpl implements PictureService {
         return PageUtils.getPage(param, req1 -> pictureMapper.pageList(param));
     }
 
+    @Transactional
     @Override
     public void del(PictureDelReq param) {
         Picture picture = new Picture();
