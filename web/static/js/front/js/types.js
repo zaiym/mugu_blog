@@ -5,10 +5,6 @@ if (requestUrl==null){
 }
 //接收编辑传递过来的参数
 var typeId= window.location.href.split('?')[1]==undefined?null:window.location.href.split('?')[1].split('=')[1];
-var params={"pageNum": 1, "pageSize": 10, "status": 2}
-if(typeId!=null){
-    params={"pageNum": 1, "pageSize": 10, "status": 2,"typeId":typeId};
-}
 $.ajax({
     type: "POST",
     data: JSON.stringify({
@@ -24,7 +20,7 @@ $.ajax({
             var list=res.data.result;
             for (var i = 0; i < list.length; i++) {
                 var str=list[i];
-                var html="<div class=\"ui labeled button m-margin-tb-tiny\" onclick='listArticles({\"pageNum\": 1, \"pageSize\": 10, \"status\": 2,\"typeId\":"+str.id+"})'>\n" +
+                var html="<div class=\"ui labeled button m-margin-tb-tiny\""+' onclick="listArticles(1,10,2,'+str.id+')">\n'+
                     "          <a href=\"#\" class=\"ui basic  button\">"+str.name+"</a>\n" +
                     "          <div class=\"ui basic  left pointing label\">"+str.total+"</div>\n" +
                     "        </div>";
@@ -40,7 +36,11 @@ $.ajax({
 });
 
 //分页获取文章
-function listArticles(params) {
+function listArticles(pageNum,pageSize,status,typeId) {
+    var params={"pageNum": pageNum, "pageSize": pageSize, "status": status};
+    if (typeId!=null){
+        params={"pageNum": pageNum, "pageSize": pageSize, "status": status,"typeId":typeId};
+    }
     $.ajax({
         type: "POST",
         data: JSON.stringify(params),
@@ -52,6 +52,19 @@ function listArticles(params) {
             //返回成功
             if (res.code == 200) {
                 var list = res.data.result;
+                var total=res.data.pages;
+                var p="<div class=\"three wide column\" align=\"center\">\n" +
+                    "        <a class=\"item\" onclick='next("+(pageNum-1<=0?1:pageNum-1)+","+(pageSize)+","+(status)+","+(typeId)+")'>上一页</a>\n" +
+                    "      </div>\n" +
+                    "\n" +
+                    "      <div class=\"ten wide column\" align=\"center\">\n" +
+                    "        <p> <span></span>"+pageNum+"<span></span> </p>\n" +
+                    "      </div>\n" +
+                    "\n" +
+                    "      <div class=\"three wide column\" align=\"center\">\n" +
+                    "        <a class=\"item\" onclick='next("+(pageNum+1>total?total:pageNum+1)+","+(pageSize)+","+(status)+","+(typeId)+")'>下一页</a>\n" +
+                    "      </div>";
+                $("#pageHelper").text('');
                 for (var i = 0; i < list.length; i++) {
                     var str = list[i];
                     var html="<div class=\"ui padded vertical segment m-padded-tb-large\">\n" +
@@ -85,7 +98,7 @@ function listArticles(params) {
                         "\n" +
                         "          <div class=\"five wide column\">\n" +
                         "            <a href=\"#\" target=\"_blank\">\n" +
-                        "              <img src=\"../static/images/backimg1.jpg\" alt=\"\" class=\"ui rounded image\">\n" +
+                        "              <img src="+'"'+str.imgUrl+'"'+" alt=\"\" class=\"ui rounded image\">\n" +
                         "            </a>\n" +
                         "          </div>\n" +
                         "\n" +
@@ -93,6 +106,7 @@ function listArticles(params) {
                         "      </div>";
                     $("#article").append(html);
                 }
+                $("#pageHelper").append(p);
             } else {
                 alert(res.msg);
             }
@@ -103,7 +117,11 @@ function listArticles(params) {
     });
 }
 
-listArticles(params);
+function next(pageNum,pageSize,status,typeId) {
+    listArticles(pageNum,pageSize,status,typeId);
+}
+
+listArticles(1,10,2,typeId);
 
 
 // 运行时间统计

@@ -24,7 +24,7 @@ function listArticles(params) {
                         "              <div>\n" +
                         "                <time>"+str.createTime+"</time>\n" +
                         "                <div class=\"scientist\" >\n" +
-                        "                    <a href='blog.html?id="+str.id+"'>\n" +
+                        "                    <a href='blog.html?id="+str.articleId+"'>\n" +
                         "                      <h3 class=\"state\" style=\"text-align:center;font-size: 16px;color: #000;\">"+str.title+"</h3>\n" +
                         "                    </a>\n" +
                         "                </div>\n" +
