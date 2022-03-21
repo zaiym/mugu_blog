@@ -12,7 +12,7 @@ function getTotal(){
             if (res.code==200){
                 $("#todayVisitNum").text(res.data.todayVisitNum);
                 $("#articleNum").text(res.data.articleNum);
-                $("#commentNum").text(res.data.commentNum);
+                $("#commentNum1").text(res.data.commentNum);
                 $("#messageNum").text(res.data.messageNum);
                 $("#visitNum").text(res.data.visitNum);
             }else{
@@ -87,7 +87,7 @@ $("#footer").append("<!--容器-->\n" +
     "                        </div>\n" +
     "                        <div class=\"m-text-thin\" style=\"text-align: left;margin-left: 75px\">\n" +
     "                            评论总数： <h2 class=\"ui orange header m-inline-block m-margin-top-null\"\n" +
-    "                                      style=\"font-size:medium;\" id=\"commentNum\">  </h2> 条\n" +
+    "                                      style=\"font-size:medium;\" id=\"commentNum1\">  </h2> 条\n" +
     "                        </div>\n" +
     "                        <div class=\"m-text-thin\" style=\"text-align: left;margin-left: 75px\">\n" +
     "                            留言总数： <h2 class=\"ui orange header m-inline-block m-margin-top-null\"\n" +
