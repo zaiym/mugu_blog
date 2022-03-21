@@ -277,12 +277,6 @@
 
             <dependency>
                 <groupId>com.mugu.blog</groupId>
-                <artifactId>types-api</artifactId>
-                <version>${blog.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>com.mugu.blog</groupId>
                 <artifactId>article-api</artifactId>
                 <version>${blog.version}</version>
             </dependency>
