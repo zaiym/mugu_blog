@@ -16,7 +16,7 @@ public class UserFeignFallback implements UserFeign {
 
     @Override
     public ResultMsg<SysUser> getByUsername(String username) {
-        log.error("User Server Fallback..........");
+        log.error("User Server Fallback......");
         return ResultMsg.resultFail(ResultCode.SERVER_FALLBACK.getCode(),ResultCode.SERVER_FALLBACK.getMsg());
     }
 
